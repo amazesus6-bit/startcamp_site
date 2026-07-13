@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지훈의 SSAFY 생존 원칙 - 학습 원칙</title>
+    <!-- 폰트: Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    
+    <style>
+        :root {
+            /* 지정해주신 컬러 팔레트 */
+            --color-white: #FFFFFF;
+            --color-skyblue: #0A6EBD;
+            --color-skyblue-light: #EBF5FB;
+            --color-black: #111111;
+            --color-border: #E5E8EB;
+            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            
+            /* 학습 원칙 페이지 전용 스타일 정의 */
+            --color-text-muted: #555555;
+            --color-shadow: rgba(10, 110, 189, 0.08);
+        }
+
+        /* 기본 여백 제거 및 폰트 적용 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-white);
+            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 (실제 본문 적용 시 필요) */
+            padding-top: 60px; 
+            color: var(--color-black);
+            overflow-x: hidden;
+        }
+
+        /* 공통 링크 스타일 제거 */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+
+        /* 상단 고정 네비게이션 바 레이아웃 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+        }
+
+        /* 컨테이너 중앙 정렬 및 넓이 제한 */
+        .navbar-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* 로고 영역 스타일 */
+        .navbar-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 개별 메뉴 항목 스타일 */
+        .nav-item {
+            display: block;
+            padding: 0 15px;
+            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-black);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--color-skyblue);
+        }
+
+        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            left: 15px;
+            right: 15px;
+            height: 3px;
+            background-color: var(--color-skyblue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
+        .navbar-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        }
+
+        /* 햄버거 버튼의 선(가로줄) 3개 */
+        .navbar-toggle .bar {
+            display: block;
+            width: 24px;
+            height: 3px;
+            margin: 5px 0;
+            background-color: var(--color-black);
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
+        .navbar-toggle.open .bar:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .navbar-toggle.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar-toggle.open .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        @media screen and (max-width: 768px) {
+            .navbar-toggle {
+                display: block; /* 햄버거 버튼 표시 */
+            }
+
+            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
+            .navbar-menu {
+                position: absolute;
+                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
+                left: 0;
+                width: 100%;
+                background-color: var(--color-white);
+                flex-direction: column;
+                gap: 0;
+                /* 슬라이드 다운 애니메이션을 위한 설정 */
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+
+            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
+            .navbar-menu.show {
+                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
+            }
+
+            /* 모바일 메뉴 항목 경계선 추가 */
+            .navbar-menu li {
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            /* 마지막 항목 경계선 제거 */
+            .navbar-menu li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-item {
+                line-height: normal;
+                padding: 20px 0;
+            }
+
+            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
+            
+            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
+            .nav-item.active {
+                background-color: var(--color-skyblue-light);
+            }
+        }
+    </style>
+
+    <style>
+        /* 학습 원칙 영역 레이아웃 */
+        .principles-section {
+            width: 100%;
+            min-height: calc(100vh - 60px);
+            background-color: var(--color-skyblue-light);
+            padding: 80px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .principles-container {
+            max-width: 1024px;
+            width: 100%;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        /* 상단 소제목 */
+        .principles-subtitle {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--color-skyblue);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        /* 메인 대제목 */
+        .principles-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-black);
+            margin-bottom: 50px;
+            letter-spacing: -0.03em;
+        }
+
+        /* 가로 3열 반응형 그리드 */
+        .principles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            max-width: 100%;
+            margin: 0 auto;
+        }
+
+        /* 학습 원칙 전용 카드 스타일링 (어제 결과물 테마 유지) */
+        .principles-card {
+            background-color: var(--color-white);
+            border: 1px solid var(--color-border);
+            border-radius: 20px;
+            padding: 45px 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--color-shadow);
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                        border-color 0.3s ease, 
+                        box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        /* 호버 시 1.05배 확대, 블루 테두리 및 그림자 강조 */
+        .principles-card:hover {
+            transform: scale(1.05);
+            border-color: var(--color-skyblue);
+            box-shadow: 0 20px 40px rgba(10, 110, 189, 0.12);
+        }
+
+        /* 카드 내부 SVG 아이콘 박스 */
+        .card-icon {
+            width: 64px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            color: var(--color-skyblue);
+            transition: transform 0.3s ease;
+        }
+
+        .principles-card:hover .card-icon {
+            transform: translateY(-4px);
+        }
+
+        /* 카드 제목 (원칙 명칭) */
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: var(--color-black);
+            margin-bottom: 16px;
+            letter-spacing: -0.01em;
+        }
+
+        /* 카드 설명 텍스트 */
+        .card-desc {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+            word-break: keep-all;
+        }
+
+        /* 반응형 모바일 브레이크포인트 최적화 */
+        @media screen and (max-width: 900px) {
+            .principles-section {
+                padding: 60px 16px;
+            }
+
+            .principles-title {
+                font-size: 2rem;
+                margin-bottom: 35px;
+            }
+
+            /* 모바일 기기에서는 세로 1열 배치 */
+            .principles-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                max-width: 480px;
+            }
+
+            .principles-card {
+                padding: 35px 24px;
+            }
+
+            .card-icon {
+                width: 56px;
+                height: 56px;
+                margin-bottom: 18px;
+            }
+
+            .card-title {
+                font-size: 1.25rem;
+                margin-bottom: 12px;
+            }
+
+            .card-desc {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==== 복사 시작: 네비게이션 바 HTML (active 클래스는 "학습 원칙"에 고정 적용) ==== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- 1. 로고 -->
+            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            
+            <!-- 2. 모바일용 햄버거 버튼 -->
+            <button class="navbar-toggle" aria-label="메뉴 열기">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            
+            <!-- 3. 페이지 메뉴 목록 (학습 원칙에만 active 클래스 적용) -->
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="nav-item">홈</a></li>
+                <li><a href="strategy.html" class="nav-item">환경 전략</a></li>
+                <li><a href="principles.html" class="nav-item active">학습 원칙</a></li>
+                <li><a href="routine.html" class="nav-item">생활 루틴</a></li>
+                <li><a href="reminder.html" class="nav-item">다짐 리마인드</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
+
+    <!-- ==== 학습 원칙 본문 영역 ==== -->
+    <main class="principles-section">
+        <div class="principles-container">
+            <!-- 영문 소제목 -->
+            <span class="principles-subtitle">Uncompromising Rules</span>
+            <!-- 한글 메인 대제목 -->
+            <h1 class="principles-title">타협 없는 3대 학습 원칙</h1>
+
+            <!-- 가로 3열 카드형 구조 -->
+            <div class="principles-grid">
+                
+                <!-- 카드 1: 당일 과제 완료 -->
+                <div class="principles-card">
+                    <div class="card-icon">
+                        <!-- 성공적인 완료를 형상화한 체크리스트/클립보드 SVG 아이콘 -->
+                        <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">당일 과제 완료</h2>
+                    <p class="card-desc">그날 부여받은 과제는 반드시 그날 완수합니다.</p>
+                </div>
+
+                <!-- 카드 2: 저녁 복습 -->
+                <div class="principles-card">
+                    <div class="card-icon">
+                        <!-- 차분하고 집중적인 저녁 시간 복습을 고양하는 초승달 모양 SVG 아이콘 -->
+                        <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">저녁 복습</h2>
+                    <p class="card-desc">당일 배운 내용을 내 것으로 만들기 위해 반드시 복습합니다.</p>
+                </div>
+
+                <!-- 카드 3: 완벽한 이해 -->
+                <div class="principles-card">
+                    <div class="card-icon">
+                        <!-- 지적 호기심과 논리적 해결 및 이해를 나타내는 전구 SVG 아이콘 -->
+                        <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                        </svg>
+                    </div>
+                    <h2 class="card-title">완벽한 이해</h2>
+                    <p class="card-desc">질문을 두려워하지 않고 확실히 이해하고 넘어갑니다.</p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ==== 복사 시작: 모바일 네비게이션 스크립트 ==== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const menu = document.querySelector('.navbar-menu');
+
+            // 햄버거 버튼 클릭 이벤트 리스너
+            toggleButton.addEventListener('click', () => {
+                // 메뉴 보이기/숨기기 토글
+                menu.classList.toggle('show');
+                // 햄버거 아이콘 X 모양 변환 토글
+                toggleButton.classList.toggle('open');
+            });
+
+            // 화면 너비가 넓어지면(PC버전) 모바일 메뉴 초기화
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    menu.classList.remove('show');
+                    toggleButton.classList.remove('open');
+                }
+            });
+        });
+    </script>
+    <!-- ==== 복사 끝: 모바일 네비게이션 스크립트 ==== -->
+
+</body>
+</html>
