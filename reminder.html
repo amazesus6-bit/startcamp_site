@@ -6,137 +6,40 @@
     <title>지훈의 SSAFY 생존 원칙 - 다짐 리마인드</title>
     <!-- 폰트: Pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <!-- Tailwind CSS Browser Play CDN (v4) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <style>
-        :root {
-            /* 지정해주신 컬러 팔레트 */
-            --color-white: #FFFFFF;
-            --color-skyblue: #0A6EBD;
-            --color-skyblue-light: #EBF5FB;
-            --color-black: #111111;
-            --color-border: #E5E8EB;
-            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            
-            /* 다짐 리마인드 페이지 고유의 세부 정제 색상 */
-            --color-text-muted: #555555;
-            --color-overlay: rgba(17, 17, 17, 0.45);
-        }
-
-        /* 기본 여백 제거 및 폰트 적용 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-main);
-            background-color: var(--color-white);
-            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 (실제 본문 적용 시 필요) */
-            padding-top: 60px; 
-            overflow-x: hidden;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         }
 
-        /* 공통 링크 스타일 제거 */
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-
-        /* 상단 고정 네비게이션 바 레이아웃 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: var(--color-white);
-            border-bottom: 1px solid var(--color-border);
-            z-index: 1000;
-        }
-
-        /* 컨테이너 중앙 정렬 및 넓이 제한 */
-        .navbar-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        /* 로고 영역 스타일 */
-        .navbar-logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--color-black);
-            letter-spacing: -0.02em;
-        }
-
-        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 개별 메뉴 항목 스타일 */
-        .nav-item {
-            display: block;
-            padding: 0 15px;
-            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-black);
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--color-skyblue);
-        }
-
-        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        /* active 메뉴 하단 밑줄 및 활성 상태 스타일 */
         .nav-item.active::after {
             content: "";
             position: absolute;
-            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            bottom: -1px;
             left: 15px;
             right: 15px;
             height: 3px;
-            background-color: var(--color-skyblue);
+            background-color: #0A6EBD;
             border-radius: 3px 3px 0 0;
         }
 
-        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
-        .navbar-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        @media screen and (max-width: 768px) {
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
         }
 
-        /* 햄버거 버튼의 선(가로줄) 3개 */
+        /* 햄버거 아이콘 open 상태 애니메이션 */
         .navbar-toggle .bar {
-            display: block;
-            width: 24px;
-            height: 3px;
-            margin: 5px 0;
-            background-color: var(--color-black);
-            border-radius: 3px;
             transition: all 0.3s ease-in-out;
         }
-
-        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
         .navbar-toggle.open .bar:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
         }
@@ -147,236 +50,31 @@
             transform: translateY(-8px) rotate(-45deg);
         }
 
-        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        /* 모바일 메뉴 show 상태 및 슬라이드 트랜지션 */
         @media screen and (max-width: 768px) {
-            .navbar-toggle {
-                display: block; /* 햄버거 버튼 표시 */
-            }
-
-            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
             .navbar-menu {
-                position: absolute;
-                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
-                left: 0;
-                width: 100%;
-                background-color: var(--color-white);
-                flex-direction: column;
-                gap: 0;
-                /* 슬라이드 다운 애니메이션을 위한 설정 */
-                max-height: 0;
-                overflow: hidden;
                 transition: max-height 0.4s ease-in-out;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
-
-            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
             .navbar-menu.show {
-                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
-            }
-
-            /* 모바일 메뉴 항목 경계선 추가 */
-            .navbar-menu li {
-                width: 100%;
-                text-align: center;
-                border-bottom: 1px solid var(--color-border);
-            }
-
-            /* 마지막 항목 경계선 제거 */
-            .navbar-menu li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-item {
-                line-height: normal;
-                padding: 20px 0;
-            }
-
-            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
-            .nav-item.active::after {
-                bottom: 12px;
-                left: 50%;
-                right: auto;
-                width: 80px;
-                transform: translateX(-50%);
-            }
-            
-            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
-            .nav-item.active {
-                background-color: var(--color-skyblue-light);
+                max-height: 350px;
             }
         }
-    </style>
 
-    <style>
-        /* 다짐 리마인드 전용 본문 레이아웃 */
-        .reminder-section {
-            width: 100%;
-            /* 네비게이션 헤더 높이만큼 뺀 공간을 정교하게 점유 */
-            min-height: calc(100vh - 60px);
-            background-color: var(--color-skyblue-light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
-        }
-
-        /* 웅장하고 깔끔한 다짐 리마인드 인터페이스 전용 카드 컨테이너 */
-        .reminder-card {
-            max-width: 680px;
-            width: 100%;
-            background-color: var(--color-white);
-            border: 1px solid var(--color-border);
-            border-radius: 24px;
-            padding: 70px 45px;
-            text-align: center;
-            box-shadow: 0 15px 45px rgba(10, 110, 189, 0.08);
-            transform: translateY(0);
-            animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
-
-        /* 메인 다짐 대제목 */
-        .reminder-title {
-            font-size: clamp(1.75rem, 4vw, 2.4rem);
-            font-weight: 800;
-            color: var(--color-black);
-            line-height: 1.45;
-            margin-bottom: 24px;
-            letter-spacing: -0.03em;
-            word-break: keep-all;
-        }
-
-        /* 보조 서술 텍스트 */
-        .reminder-desc {
-            font-size: clamp(1rem, 2.5vw, 1.2rem);
-            font-weight: 600;
-            color: var(--color-text-muted);
-            line-height: 1.6;
-            margin-bottom: 50px;
-            word-break: keep-all;
-        }
-
-        /* 다짐 리마인드 호출 전용 메인 블랙 버튼 */
-        .reminder-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background-color: var(--color-black);
-            color: var(--color-white);
-            padding: 18px 48px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            border: none;
-            border-radius: 12px;
-            cursor: pointer;
-            box-shadow: 0 6px 20px rgba(17, 17, 17, 0.15);
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            user-select: none;
-            touch-action: manipulation;
-        }
-
-        /* 버튼 호버 액션: 부드러운 위쪽 이동 및 음영 진화 */
-        .reminder-btn:hover {
-            background-color: #222222;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 28px rgba(17, 17, 17, 0.25);
-        }
-
-        /* 버튼 액티브(클릭/탭) 피드백 */
-        .reminder-btn:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 12px rgba(17, 17, 17, 0.15);
-        }
-
-        /* 다짐 리마인드 팝업 모달 오버레이 스타일 */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--color-overlay);
-            backdrop-filter: blur(5px); /* 고급 블러 처리 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* 모달이 활성화되어 노출되었을 때의 상태 */
+        /* 다짐 리마인드 팝업 모달 오버레이 및 모달 카드의 상태 전환 */
         .modal-overlay.show {
             opacity: 1;
             pointer-events: auto;
         }
 
-        /* 모달 박스 메인 카드 프레임 */
-        .modal-card {
-            background-color: var(--color-white);
-            border-radius: 24px;
-            padding: 50px 35px;
-            max-width: 460px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--color-border);
-            transform: scale(0.9) translateY(10px);
-            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        /* 모달 활성화 시 스케일 원복 애니메이션 효과 */
         .modal-overlay.show .modal-card {
             transform: scale(1) translateY(0);
         }
 
-        /* 모달 상부 상징 아이콘 */
-        .modal-icon {
-            width: 56px;
-            height: 56px;
-            background-color: var(--color-skyblue-light);
-            color: var(--color-skyblue);
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-        }
-
-        /* 모달 랜덤 다짐 문구 텍스트 */
-        .modal-text {
-            font-size: clamp(1.15rem, 3vw, 1.35rem);
-            font-weight: 800;
-            color: var(--color-skyblue);
-            line-height: 1.5;
-            margin-bottom: 35px;
-            word-break: keep-all;
-        }
-
-        /* 모달 닫기(확인) 전용 버튼 */
-        .modal-close-btn {
-            width: 100%;
-            background-color: var(--color-black);
-            color: var(--color-white);
-            border: none;
-            padding: 15px 0;
-            font-size: 1rem;
-            font-weight: 700;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.2s ease, transform 0.1s ease;
-        }
-
-        .modal-close-btn:hover {
-            background-color: #222222;
-        }
-
-        .modal-close-btn:active {
-            transform: scale(0.99);
-        }
-
         /* 카드 최초 진입 페이드인 업 트랜지션 정의 */
+        .animated-entrance {
+            animation: cardEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         @keyframes cardEntrance {
             from {
                 opacity: 0;
@@ -387,64 +85,44 @@
                 transform: translateY(0);
             }
         }
-
-        /* 모바일 최적화 규격 가드레일 (최대 550px) */
-        @media screen and (max-width: 550px) {
-            .reminder-card {
-                padding: 45px 24px;
-            }
-
-            .reminder-desc {
-                margin-bottom: 35px;
-            }
-
-            .reminder-btn {
-                padding: 16px 32px;
-                width: 100%; /* 모바일 환경에서 꽉 찬 직관성 지원 */
-            }
-
-            .modal-card {
-                padding: 40px 24px;
-            }
-        }
     </style>
 </head>
-<body>
+<body class="bg-white pt-[60px] text-[#111111] overflow-x-hidden">
 
     <!-- ==== 복사 시작: 네비게이션 바 HTML (active 클래스는 "다짐 리마인드"에만 독점 지정) ==== -->
-    <nav class="navbar">
-        <div class="navbar-container">
+    <nav class="navbar fixed top-0 left-0 w-full h-[60px] bg-white border-b border-[#E5E8EB] z-[1000]">
+        <div class="navbar-container max-w-[1024px] mx-auto px-[20px] flex justify-between items-center h-full">
             <!-- 1. 로고 -->
-            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            <a href="index.html" class="navbar-logo text-[1.25rem] font-extrabold text-[#111111] tracking-[-0.02em]">JIHUN SSAFY</a>
             
             <!-- 2. 모바일용 햄버거 버튼 -->
-            <button class="navbar-toggle" aria-label="메뉴 열기">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <button class="navbar-toggle hidden max-[768px]:block bg-transparent border-none cursor-pointer p-[5px] z-[1001]" aria-label="메뉴 열기">
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
             </button>
             
             <!-- 3. 페이지 메뉴 목록 (다짐 리마인드에만 active 클래스 적용) -->
-            <ul class="navbar-menu">
-                <li><a href="index.html" class="nav-item">홈</a></li>
-                <li><a href="strategy.html" class="nav-item">환경 전략</a></li>
-                <li><a href="principles.html" class="nav-item">학습 원칙</a></li>
-                <li><a href="routine.html" class="nav-item">생활 루틴</a></li>
-                <li><a href="reminder.html" class="nav-item active">다짐 리마인드</a></li>
+            <ul class="navbar-menu flex items-center gap-[10px] max-[768px]:absolute max-[768px]:top-[60px] max-[768px]:left-0 max-[768px]:w-full max-[768px]:bg-white max-[768px]:flex-col max-[768px]:gap-0 max-[768px]:max-h-0 max-[768px]:overflow-hidden max-[768px]:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="index.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">홈</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="strategy.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">환경 전략</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="principles.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">학습 원칙</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="routine.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">생활 루틴</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:last:border-b-0"><a href="reminder.html" class="nav-item active block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#0A6EBD] max-[768px]:bg-[#EBF5FB] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">다짐 리마인드</a></li>
             </ul>
         </div>
     </nav>
     <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
 
     <!-- ==== 다짐 리마인드 전용 본문 영역 ==== -->
-    <main class="reminder-section">
-        <div class="reminder-card">
+    <main class="w-full min-h-[calc(100vh-60px)] bg-[#EBF5FB] flex items-center justify-center py-[40px] px-[20px]">
+        <div class="animated-entrance max-w-[680px] w-full bg-white border border-[#E5E8EB] rounded-[24px] p-[70px_45px] max-[550px]:p-[45px_24px] text-center shadow-[0_15px_45px_rgba(10,110,189,0.08)]">
             <!-- 고딕적이고 정갈하게 다듬어진 1일차 텍스트 구조 -->
-            <h1 class="reminder-title">초심을 잃고 흔들릴 때마다,<br>이 공간을 기억할 것</h1>
-            <p class="reminder-desc">1년 뒤, 타협하지 않은 나 자신에게 당당해질 수 있도록.</p>
+            <h1 class="text-[1.75rem] min-[550px]:text-[2.4rem] font-extrabold text-[#111111] leading-[1.45] mb-[24px] tracking-[-0.03em] break-keep">초심을 잃고 흔들릴 때마다,<br>이 공간을 기억할 것</h1>
+            <p class="text-[1rem] min-[550px]:text-[1.2rem] font-semibold text-[#555555] leading-[1.6] mb-[50px] max-[550px]:mb-[35px] break-keep">1년 뒤, 타협하지 않은 나 자신에게 당당해질 수 있도록.</p>
             
             <!-- 다짐 구동 버튼 -->
-            <button class="reminder-btn" id="btn-reminder-trigger">
+            <button class="inline-flex items-center justify-center gap-[10px] bg-[#111111] text-white py-[18px] px-[48px] max-[550px]:py-[16px] max-[550px]:px-[32px] max-[550px]:w-full text-[1.05rem] font-extrabold rounded-[12px] shadow-[0_6px_20px_rgba(17,17,17,0.15)] transition-all duration-300 ease-[cubic-bezier(0.25,1,0.5,1)] hover:bg-[#222222] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_rgba(17,17,17,0.25)] active:translate-y-0 active:shadow-[0_4px_12px_rgba(17,17,17,0.15)] select-none touch-manipulation cursor-pointer" id="btn-reminder-trigger">
                 <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
                 </svg>
@@ -454,16 +132,16 @@
     </main>
 
     <!-- ==== 다짐 리마인드 전용 고품질 반응형 모달 컴포넌트 ==== -->
-    <div class="modal-overlay" id="reminder-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
-        <div class="modal-card">
-            <div class="modal-icon">
+    <div class="modal-overlay fixed top-0 left-0 w-full h-full bg-[rgba(17,17,17,0.45)] backdrop-blur-[5px] flex items-center justify-center z-[2000] opacity-0 pointer-events-none transition-opacity duration-350 ease-[cubic-bezier(0.16,1,0.3,1)]" id="reminder-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+        <div class="modal-card bg-white rounded-[24px] p-[50px_35px] max-[550px]:p-[40px_24px] max-w-[460px] w-[90%] text-center shadow-[0_25px_60px_rgba(0,0,0,0.2)] border border-[#E5E8EB] scale-90 translate-y-[10px] transition-transform duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]">
+            <div class="w-[56px] h-[56px] bg-[#EBF5FB] text-[#0A6EBD] rounded-full inline-flex items-center justify-center mb-[24px]">
                 <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
             </div>
             <!-- 실시간으로 텍스트가 바뀔 대상 브레이크 엘리먼트 -->
-            <h2 id="modal-headline" class="modal-text">다짐을 다시 한 번 마음에 새깁니다</h2>
-            <button class="modal-close-btn" id="btn-modal-close">확인</button>
+            <h2 id="modal-headline" class="text-[1.15rem] min-[550px]:text-[1.35rem] font-extrabold text-[#0A6EBD] leading-[1.5] mb-[35px] break-keep">다짐을 다시 한 번 마음에 새깁니다</h2>
+            <button class="w-full bg-[#111111] text-white py-[15px] px-0 text-[1rem] font-bold rounded-[10px] hover:bg-[#222222] active:scale-[0.99] transition-[background-color,transform] duration-200 cursor-pointer" id="btn-modal-close">확인</button>
         </div>
     </div>
 

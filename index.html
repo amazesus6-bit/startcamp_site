@@ -6,136 +6,40 @@
     <title>지훈의 SSAFY 생존 원칙 - 홈</title>
     <!-- 폰트: Pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <!-- Tailwind CSS Browser CDN (v4) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <style>
-        :root {
-            /* 지정해주신 컬러 팔레트 */
-            --color-white: #FFFFFF;
-            --color-skyblue: #0A6EBD;
-            --color-skyblue-light: #EBF5FB;
-            --color-black: #111111;
-            --color-border: #E5E8EB;
-            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            
-            /* 히어로 섹션 전용 파란색 톤 업 그래디언트 */
-            --color-skyblue-gradient: radial-gradient(circle at 50% 50%, #1583db 0%, #0A6EBD 100%);
-        }
-
-        /* 기본 여백 제거 및 폰트 적용 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-main);
-            background-color: var(--color-white);
-            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 */
-            padding-top: 60px; 
-            overflow-x: hidden;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         }
 
-        /* 공통 링크 스타일 제거 */
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-
-        /* 상단 고정 네비게이션 바 레이아웃 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: var(--color-white);
-            border-bottom: 1px solid var(--color-border);
-            z-index: 1000;
-        }
-
-        /* 컨테이너 중앙 정렬 및 넓이 제한 */
-        .navbar-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        /* 로고 영역 스타일 */
-        .navbar-logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--color-black);
-            letter-spacing: -0.02em;
-        }
-
-        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 개별 메뉴 항목 스타일 */
-        .nav-item {
-            display: block;
-            padding: 0 15px;
-            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-black);
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--color-skyblue);
-        }
-
-        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        /* active 메뉴 하단 밑줄 및 활성 상태 스타일 */
         .nav-item.active::after {
             content: "";
             position: absolute;
-            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            bottom: -1px;
             left: 15px;
             right: 15px;
             height: 3px;
-            background-color: var(--color-skyblue);
+            background-color: #0A6EBD;
             border-radius: 3px 3px 0 0;
         }
 
-        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
-        .navbar-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        @media screen and (max-width: 768px) {
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
         }
 
-        /* 햄버거 버튼의 선(가로줄) 3개 */
+        /* 햄버거 아이콘 open 상태 애니메이션 */
         .navbar-toggle .bar {
-            display: block;
-            width: 24px;
-            height: 3px;
-            margin: 5px 0;
-            background-color: var(--color-black);
-            border-radius: 3px;
             transition: all 0.3s ease-in-out;
         }
-
-        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
         .navbar-toggle.open .bar:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
         }
@@ -146,241 +50,39 @@
             transform: translateY(-8px) rotate(-45deg);
         }
 
-        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        /* 모바일 메뉴 show 상태 및 슬라이드 트랜지션 */
         @media screen and (max-width: 768px) {
-            .navbar-toggle {
-                display: block; /* 햄버거 버튼 표시 */
-            }
-
-            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
             .navbar-menu {
-                position: absolute;
-                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
-                left: 0;
-                width: 100%;
-                background-color: var(--color-white);
-                flex-direction: column;
-                gap: 0;
-                /* 슬라이드 다운 애니메이션을 위한 설정 */
-                max-height: 0;
-                overflow: hidden;
                 transition: max-height 0.4s ease-in-out;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
-
-            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
             .navbar-menu.show {
-                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
-            }
-
-            /* 모바일 메뉴 항목 경계선 추가 */
-            .navbar-menu li {
-                width: 100%;
-                text-align: center;
-                border-bottom: 1px solid var(--color-border);
-            }
-
-            /* 마지막 항목 경계선 제거 */
-            .navbar-menu li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-item {
-                line-height: normal;
-                padding: 20px 0;
-            }
-
-            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
-            .nav-item.active::after {
-                bottom: 12px;
-                left: 50%;
-                right: auto;
-                width: 80px;
-                transform: translateX(-50%);
-            }
-            
-            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
-            .nav-item.active {
-                background-color: var(--color-skyblue-light);
+                max-height: 350px;
             }
         }
-    </style>
 
-    <style>
-        /* 네비게이션 바를 제외한 화면 크기를 충분히 채우고 스크롤이 매끄럽도록 세팅 */
+        /* 히어로 섹션 전용 파란색 톤 업 그래디언트 */
         .hero-section {
-            min-height: calc(100vh - 60px);
-            width: 100%;
-            background: var(--color-skyblue-gradient);
-            color: var(--color-white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            padding: 40px 20px;
+            background: radial-gradient(circle at 50% 50%, #1583DB 0%, #0A6EBD 100%);
         }
 
         /* 기하학 디자인 도트 패턴 */
         .hero-background-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0.08;
-            pointer-events: none;
-            background-image: radial-gradient(circle, var(--color-white) 1.5px, transparent 1.5px);
+            background-image: radial-gradient(circle, #FFFFFF 1.5px, transparent 1.5px);
             background-size: 32px 32px;
         }
 
-        .hero-container {
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-            z-index: 2;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            animation: fadeInUp 0.8s ease-out forwards;
-        }
-
-        /* 큰 제목 스타일 (반응형 클램프 적용) */
+        /* 텍스트 섀도우 효과 */
         .hero-title {
-            font-size: clamp(3.5rem, 10vw, 6.5rem);
-            font-weight: 900;
-            letter-spacing: -0.03em;
-            margin-bottom: 12px;
-            line-height: 1.1;
             text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            user-select: none;
-        }
-
-        /* 설명 문구 스타일 */
-        .hero-description {
-            font-size: clamp(1rem, 2.5vw, 1.4rem);
-            font-weight: 500;
-            line-height: 1.6;
-            margin-bottom: 30px;
-            color: rgba(255, 255, 255, 0.95);
-            letter-spacing: -0.01em;
-            word-break: keep-all;
-        }
-
-        /* [수정] 크롬 오프라인 스타일의 완전한 미니멀리즘 게임 컨테이너 */
-        .game-minimal-container {
-            width: 100%;
-            max-width: 480px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        /* [수정] 테두리, 배경, 그림자를 모두 제외한 순수한 게임화면 */
-        .game-screen {
-            position: relative;
-            width: 100%;
-            height: 150px;
-            background-color: transparent;
-            overflow: hidden;
-            display: flex;
-            align-items: flex-end;
-        }
-
-        /* [수정] 런게임 바닥 경계선 (수평선 단일 라인으로 단순화) */
-        .game-floor {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--color-white);
-            z-index: 4;
-        }
-
-        /* [수정] 캐릭터 이모지 포지셔닝 조정 (바닥선 바로 위 안착) */
-        #game-character {
-            position: absolute;
-            left: 50px;
-            bottom: 2px;
-            width: 36px;
-            height: 36px;
-            font-size: 32px;
-            line-height: 36px;
-            text-align: center;
-            z-index: 5;
-            transition: transform 0.05s linear;
-        }
-
-        /* [수정] 장애물 이모지 포지셔닝 조정 (바닥선 바로 위 안착) */
-        #game-obstacle {
-            position: absolute;
-            left: 100%;
-            bottom: 2px;
-            width: 34px;
-            height: 34px;
-            font-size: 30px;
-            line-height: 34px;
-            text-align: center;
-            z-index: 5;
-        }
-
-        /* [수정] 안내 및 알림 문구용 오버레이 영역 */
-        .game-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 7;
-            text-align: center;
         }
 
         .game-overlay-text {
-            font-size: 1.05rem;
-            font-weight: 800;
-            color: var(--color-white);
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
-            word-break: keep-all;
-            line-height: 1.4;
             animation: pulse 1.5s infinite;
         }
 
-        /* [수정] 단일 기능 통합 버튼 스타일 */
-        .game-action-btn {
-            background-color: var(--color-white);
-            color: var(--color-black);
-            padding: 15px 45px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            outline: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 25px;
-            touch-action: manipulation; 
-        }
-
-        .game-action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
-            background-color: var(--color-skyblue-light);
-            color: var(--color-skyblue);
-        }
-
-        .game-action-btn:active {
-            transform: translateY(0);
+        .hero-container {
+            animation: fadeInUp 0.8s ease-out forwards;
         }
 
         /* 안내 문구 고동치는 효과 */
@@ -403,64 +105,64 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-white pt-[60px] text-[#111111] overflow-x-hidden">
 
     <!-- ==== 복사 시작: 네비게이션 바 HTML ==== -->
-    <nav class="navbar">
-        <div class="navbar-container">
+    <nav class="navbar fixed top-0 left-0 w-full h-[60px] bg-white border-b border-[#E5E8EB] z-[1000]">
+        <div class="navbar-container max-w-[1024px] mx-auto px-[20px] flex justify-between items-center h-full">
             <!-- 1. 로고 -->
-            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            <a href="index.html" class="navbar-logo text-[1.25rem] font-extrabold text-[#111111] tracking-[-0.02em]">JIHUN SSAFY</a>
             
             <!-- 2. 모바일용 햄버거 버튼 -->
-            <button class="navbar-toggle" aria-label="메뉴 열기">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <button class="navbar-toggle hidden max-[768px]:block bg-transparent border-none cursor-pointer p-[5px] z-[1001]" aria-label="메뉴 열기">
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
             </button>
             
             <!-- 3. 페이지 메뉴 목록 (홈 메뉴에만 active 클래스 지정) -->
-            <ul class="navbar-menu">
-                <li><a href="index.html" class="nav-item active">홈</a></li>
-                <li><a href="strategy.html" class="nav-item">환경 전략</a></li>
-                <li><a href="principles.html" class="nav-item">학습 원칙</a></li>
-                <li><a href="routine.html" class="nav-item">생활 루틴</a></li>
-                <li><a href="reminder.html" class="nav-item">다짐 리마인드</a></li>
+            <ul class="navbar-menu flex items-center gap-[10px] max-[768px]:absolute max-[768px]:top-[60px] max-[768px]:left-0 max-[768px]:w-full max-[768px]:bg-white max-[768px]:flex-col max-[768px]:gap-0 max-[768px]:max-h-0 max-[768px]:overflow-hidden max-[768px]:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="index.html" class="nav-item active block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#0A6EBD] max-[768px]:bg-[#EBF5FB] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">홈</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="strategy.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">환경 전략</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="principles.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">학습 원칙</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="routine.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">생활 루틴</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:last:border-b-0"><a href="reminder.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">다짐 리마인드</a></li>
             </ul>
         </div>
     </nav>
     <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
 
     <!-- ==== 메인 홈 비주얼 영역 (히어로 섹션) ==== -->
-    <main class="hero-section">
+    <main class="hero-section min-h-[calc(100vh-60px)] w-full text-white flex items-center justify-center relative overflow-hidden p-[40px_20px]">
         <!-- 배경 디테일 레이어 -->
-        <div class="hero-background-pattern"></div>
+        <div class="hero-background-pattern absolute top-0 left-0 w-full h-full opacity-[0.08] pointer-events-none"></div>
         
-        <div class="hero-container">
+        <div class="hero-container max-w-[800px] w-full text-center z-2 flex flex-col items-center justify-center">
             <!-- 큰 제목 -->
-            <h1 class="hero-title">SSAFY</h1>
+            <h1 class="hero-title text-[clamp(3.5rem,10vw,6.5rem)] font-[900] tracking-[-0.03em] mb-[12px] leading-[1.1] select-none">SSAFY</h1>
             <!-- 설명 문구 -->
-            <p class="hero-description">타협 없는 몰입, 지훈의 SSAFY 1년 성장 각오</p>
+            <p class="hero-description text-[clamp(1rem,2.5vw,1.4rem)] font-[500] leading-[1.6] mb-[30px] text-white/95 tracking-[-0.01em] break-keep">타협 없는 몰입, 지훈의 SSAFY 1년 성장 각오</p>
             
             <!-- [수정] 백그라운드 카드 없는 미니멀 구조의 공룡 게임 영역 -->
-            <div class="game-minimal-container">
-                <div class="game-screen" id="game-screen">
+            <div class="game-minimal-container w-full max-w-[480px] flex flex-col items-center mt-[20px]">
+                <div class="game-screen relative w-full h-[150px] bg-transparent overflow-hidden flex items-end" id="game-screen">
                     <!-- 바닥 방어선 (수평선 단일 라인) -->
-                    <div class="game-floor"></div>
+                    <div class="game-floor absolute bottom-0 left-0 w-full h-[2px] bg-white z-[4]"></div>
 
                     <!-- 캐릭터 (SSAFY 교육생 상징 이모지) -->
-                    <div id="game-character">🧑‍💻</div>
+                    <div id="game-character" class="absolute left-[50px] bottom-[2px] w-[36px] h-[36px] text-[32px] leading-[36px] text-center z-[5] transition-transform duration-[0.05s] ease-linear">🧑‍💻</div>
 
                     <!-- 실시간으로 오른쪽에서 돌진해오는 장애물 -->
-                    <div id="game-obstacle">📝</div>
+                    <div id="game-obstacle" class="absolute left-full bottom-[2px] w-[34px] h-[34px] text-[30px] leading-[34px] text-center z-[5]">📝</div>
 
                     <!-- [수정] 상시 노출 상태 안내 오버레이 -->
-                    <div class="game-overlay" id="game-overlay">
-                        <div class="game-overlay-text" id="game-overlay-text">게임 시작 버튼을 눌러 도전하세요</div>
+                    <div class="game-overlay absolute top-0 left-0 w-full h-full flex justify-center items-center z-[7] text-center" id="game-overlay">
+                        <div class="game-overlay-text text-[1.05rem] font-[800] text-white break-keep leading-[1.4]" id="game-overlay-text">게임 시작 버튼을 눌러 도전하세요</div>
                     </div>
                 </div>
 
                 <!-- [수정] 단일 기능 컨트롤러 버튼 -->
-                <button class="game-action-btn" id="btn-action">
+                <button class="game-action-btn bg-white text-[#111111] py-[15px] px-[45px] text-[1.05rem] font-[800] border-none rounded-[30px] cursor-pointer shadow-[0_4px_15px_rgba(0,0,0,0.2)] transition-all duration-250 ease-out outline-none inline-flex items-center justify-center gap-[8px] mt-[25px] touch-manipulation hover:translate-y-[-2px] hover:shadow-[0_8px_22px_rgba(0,0,0,0.3)] hover:bg-[#EBF5FB] hover:text-[#0A6EBD] active:translate-y-0 active:shadow-[0_4px_12px_rgba(0,0,0,0.2)]" id="btn-action">
                     게임 시작
                 </button>
             </div>

@@ -6,138 +6,40 @@
     <title>지훈의 SSAFY 생존 원칙 - 환경 맞춤 실전 전략</title>
     <!-- 폰트: Pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <!-- Tailwind CSS Browser CDN (v4) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <style>
-        :root {
-            /* 지정해주신 컬러 팔레트 */
-            --color-white: #FFFFFF;
-            --color-skyblue: #0A6EBD;
-            --color-skyblue-light: #EBF5FB;
-            --color-black: #111111;
-            --color-border: #E5E8EB;
-            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            
-            /* 콘텐츠 레이아웃 전용 색상 추가 */
-            --color-text-muted: #666666;
-            --color-shadow: rgba(10, 110, 189, 0.06);
-        }
-
-        /* 기본 여백 제거 및 폰트 적용 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-main);
-            background-color: var(--color-white);
-            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 (실제 본문 적용 시 필요) */
-            padding-top: 60px; 
-            color: var(--color-black);
-            overflow-x: hidden;
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         }
 
-        /* 공통 링크 스타일 제거 */
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-
-        /* 상단 고정 네비게이션 바 레이아웃 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: var(--color-white);
-            border-bottom: 1px solid var(--color-border);
-            z-index: 1000;
-        }
-
-        /* 컨테이너 중앙 정렬 및 넓이 제한 */
-        .navbar-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        /* 로고 영역 스타일 */
-        .navbar-logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--color-black);
-            letter-spacing: -0.02em;
-        }
-
-        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 개별 메뉴 항목 스타일 */
-        .nav-item {
-            display: block;
-            padding: 0 15px;
-            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-black);
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--color-skyblue);
-        }
-
-        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        /* active 메뉴 하단 밑줄 및 활성 상태 스타일 */
         .nav-item.active::after {
             content: "";
             position: absolute;
-            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            bottom: -1px;
             left: 15px;
             right: 15px;
             height: 3px;
-            background-color: var(--color-skyblue);
+            background-color: #0A6EBD;
             border-radius: 3px 3px 0 0;
         }
 
-        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
-        .navbar-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        @media screen and (max-width: 768px) {
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
         }
 
-        /* 햄버거 버튼의 선(가로줄) 3개 */
+        /* 햄버거 아이콘 open 상태 애니메이션 */
         .navbar-toggle .bar {
-            display: block;
-            width: 24px;
-            height: 3px;
-            margin: 5px 0;
-            background-color: var(--color-black);
-            border-radius: 3px;
             transition: all 0.3s ease-in-out;
         }
-
-        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
         .navbar-toggle.open .bar:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
         }
@@ -148,293 +50,111 @@
             transform: translateY(-8px) rotate(-45deg);
         }
 
-        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        /* 모바일 메뉴 show 상태 및 슬라이드 트랜지션 */
         @media screen and (max-width: 768px) {
-            .navbar-toggle {
-                display: block; /* 햄버거 버튼 표시 */
-            }
-
-            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
             .navbar-menu {
-                position: absolute;
-                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
-                left: 0;
-                width: 100%;
-                background-color: var(--color-white);
-                flex-direction: column;
-                gap: 0;
-                /* 슬라이드 다운 애니메이션을 위한 설정 */
-                max-height: 0;
-                overflow: hidden;
                 transition: max-height 0.4s ease-in-out;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
-
-            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
             .navbar-menu.show {
-                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
-            }
-
-            /* 모바일 메뉴 항목 경계선 추가 */
-            .navbar-menu li {
-                width: 100%;
-                text-align: center;
-                border-bottom: 1px solid var(--color-border);
-            }
-
-            /* 마지막 항목 경계선 제거 */
-            .navbar-menu li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-item {
-                line-height: normal;
-                padding: 20px 0;
-            }
-
-            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
-            .nav-item.active::after {
-                bottom: 12px;
-                left: 50%;
-                right: auto;
-                width: 80px;
-                transform: translateX(-50%);
-            }
-            
-            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
-            .nav-item.active {
-                background-color: var(--color-skyblue-light);
+                max-height: 350px;
             }
         }
-    </style>
 
-    <style>
-        /* 전략 본문 콘텐츠 영역 전체 포장 레이아웃 */
-        .strategy-section {
-            width: 100%;
-            min-height: calc(100vh - 60px);
-            background-color: var(--color-skyblue-light);
-            padding: 80px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .strategy-container {
-            max-width: 1024px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        /* 상단 영문 슬로건 */
-        .strategy-subtitle {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--color-skyblue);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        /* 메인 핵심 대제목 */
-        .strategy-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--color-black);
-            margin-bottom: 50px;
-            letter-spacing: -0.03em;
-        }
-
-        /* 2x2 반응형 카드 그리드 */
-        .strategy-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            max-width: 860px;
-            margin: 0 auto;
-        }
-
-        /* 개별 전략 카드 공통 스타일 */
+        /* 카드 마우스 호버 트랜지션 */
         .strategy-card {
-            background-color: var(--color-white);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 40px 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px var(--color-shadow);
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                        border-color 0.3s ease, 
-                        box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
         }
-
-        /* 정교한 마우스 오버 효과 (미세 확대, 테두리 색상 강조, 그림자 확대) */
-        .strategy-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--color-skyblue);
-            box-shadow: 0 20px 40px rgba(10, 110, 189, 0.12);
-        }
-
-        /* 전략 아이콘 공간 */
-        .card-icon {
-            width: 64px;
-            height: 64px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 24px;
-            color: var(--color-skyblue);
+        .strategy-card .card-icon {
             transition: transform 0.3s ease;
         }
-
         .strategy-card:hover .card-icon {
             transform: scale(1.1);
         }
-
-        /* 카드 소제목 */
-        .card-title {
-            font-size: 1.35rem;
-            font-weight: 800;
-            color: var(--color-black);
-            margin-bottom: 14px;
-            letter-spacing: -0.01em;
-        }
-
-        /* 카드 설명 텍스트 */
-        .card-desc {
-            font-size: 1rem;
-            font-weight: 500;
-            color: var(--color-text-muted);
-            line-height: 1.6;
-            word-break: keep-all;
-        }
-
-        /* 모바일 및 태블릿 스크린 크기에 맞는 레이아웃 조정 */
-        @media screen and (max-width: 768px) {
-            .strategy-section {
-                padding: 50px 16px;
-            }
-
-            .strategy-title {
-                font-size: 2rem;
-                margin-bottom: 35px;
-            }
-
-            /* 모바일 환경에서는 카드가 세로로 1열 정렬 */
-            .strategy-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .strategy-card {
-                padding: 30px 20px;
-            }
-
-            .card-icon {
-                width: 56px;
-                height: 56px;
-                margin-bottom: 18px;
-            }
-
-            .card-title {
-                font-size: 1.2rem;
-                margin-bottom: 10px;
-            }
-
-            .card-desc {
-                font-size: 0.95rem;
-            }
-        }
     </style>
 </head>
-<body>
+<body class="bg-white pt-[60px] text-[#111111] overflow-x-hidden">
 
     <!-- ==== 복사 시작: 네비게이션 바 HTML ==== -->
-    <nav class="navbar">
-        <div class="navbar-container">
+    <nav class="navbar fixed top-0 left-0 w-full h-[60px] bg-white border-b border-[#E5E8EB] z-[1000]">
+        <div class="navbar-container max-w-[1024px] mx-auto px-[20px] flex justify-between items-center h-full">
             <!-- 1. 로고 -->
-            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            <a href="index.html" class="navbar-logo text-[1.25rem] font-extrabold text-[#111111] tracking-[-0.02em]">JIHUN SSAFY</a>
             
             <!-- 2. 모바일용 햄버거 버튼 -->
-            <button class="navbar-toggle" aria-label="메뉴 열기">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <button class="navbar-toggle hidden max-[768px]:block bg-transparent border-none cursor-pointer p-[5px] z-[1001]" aria-label="메뉴 열기">
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
             </button>
             
             <!-- 3. 페이지 메뉴 목록 (환경 전략 메뉴에만 'active' 클래스 적용) -->
-            <ul class="navbar-menu">
-                <li><a href="index.html" class="nav-item">홈</a></li>
-                <li><a href="strategy.html" class="nav-item active">환경 전략</a></li>
-                <li><a href="principles.html" class="nav-item">학습 원칙</a></li>
-                <li><a href="routine.html" class="nav-item">생활 루틴</a></li>
-                <li><a href="reminder.html" class="nav-item">다짐 리마인드</a></li>
+            <ul class="navbar-menu flex items-center gap-[10px] max-[768px]:absolute max-[768px]:top-[60px] max-[768px]:left-0 max-[768px]:w-full max-[768px]:bg-white max-[768px]:flex-col max-[768px]:gap-0 max-[768px]:max-h-0 max-[768px]:overflow-hidden max-[768px]:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="index.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">홈</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="strategy.html" class="nav-item active block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#0A6EBD] max-[768px]:bg-[#EBF5FB] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">환경 전략</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="principles.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">학습 원칙</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="routine.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">생활 루틴</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:last:border-b-0"><a href="reminder.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">다짐 리마인드</a></li>
             </ul>
         </div>
     </nav>
     <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
 
     <!-- ==== 환경 맞춤 실전 전략 본문 영역 ==== -->
-    <main class="strategy-section">
-        <div class="strategy-container">
+    <main class="strategy-section w-full min-h-[calc(100vh-60px)] bg-[#EBF5FB] flex items-center justify-center py-[80px] px-[20px] max-[768px]:py-[50px] max-[768px]:px-[16px]">
+        <div class="strategy-container max-w-[1024px] w-full mx-auto text-center">
             <!-- 영문 소제목 -->
-            <span class="strategy-subtitle">Real-world Strategy</span>
+            <span class="strategy-subtitle text-[1.1rem] font-bold text-[#0A6EBD] uppercase tracking-[0.1em] mb-[12px] block">Real-world Strategy</span>
             <!-- 한글 메인 대제목 -->
-            <h1 class="strategy-title">환경 맞춤 실전 전략</h1>
+            <h1 class="strategy-title text-[2.5rem] max-[768px]:text-[2rem] font-extrabold text-[#111111] mb-[50px] max-[768px]:mb-[35px] tracking-[-0.03em]">환경 맞춤 실전 전략</h1>
 
             <!-- 2x2 카드 레이아웃 -->
-            <div class="strategy-grid">
+            <div class="strategy-grid grid grid-cols-2 max-[768px]:grid-cols-1 gap-[24px] max-[768px]:gap-[16px] max-w-[860px] mx-auto">
                 <!-- 카드 1: 기기 지참 불가 -->
-                <div class="strategy-card">
-                    <div class="card-icon">
+                <div class="strategy-card bg-white border border-[#E5E8EB] rounded-[20px] p-[40px_30px] max-[768px]:p-[30px_20px] text-center shadow-[0_10px_30px_rgba(10,110,189,0.06)] hover:shadow-[0_20px_40px_rgba(10,110,189,0.12)] hover:-translate-y-[8px] hover:border-[#0A6EBD] flex flex-col items-center justify-center">
+                    <div class="card-icon w-[64px] h-[64px] max-[768px]:w-[56px] max-[768px]:h-[56px] flex items-center justify-center mb-[24px] max-[768px]:mb-[18px] text-[#0A6EBD]">
                         <!-- 기기 반입 및 사용 제한을 직관적으로 표현하는 금지 라인 스크린 SVG -->
                         <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path>
                         </svg>
                     </div>
-                    <h2 class="card-title">기기 지참 불가</h2>
-                    <p class="card-desc">오프라인 환경을 정확히 인지합니다.</p>
+                    <h2 class="card-title text-[1.35rem] max-[768px]:text-[1.2rem] font-extrabold text-[#111111] mb-[14px] max-[768px]:mb-[10px] tracking-[-0.01em]">기기 지참 불가</h2>
+                    <p class="card-desc text-[1rem] max-[768px]:text-[0.95rem] font-medium text-[#666666] leading-[1.6] break-keep">오프라인 환경을 정확히 인지합니다.</p>
                 </div>
 
                 <!-- 카드 2: Notion 핵심 요약 -->
-                <div class="strategy-card">
-                    <div class="card-icon">
+                <div class="strategy-card bg-white border border-[#E5E8EB] rounded-[20px] p-[40px_30px] max-[768px]:p-[30px_20px] text-center shadow-[0_10px_30px_rgba(10,110,189,0.06)] hover:shadow-[0_20px_40px_rgba(10,110,189,0.12)] hover:-translate-y-[8px] hover:border-[#0A6EBD] flex flex-col items-center justify-center">
+                    <div class="card-icon w-[64px] h-[64px] max-[768px]:w-[56px] max-[768px]:h-[56px] flex items-center justify-center mb-[24px] max-[768px]:mb-[18px] text-[#0A6EBD]">
                         <!-- 노트 정리 및 구조화된 문서를 상징하는 Document SVG -->
                         <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                         </svg>
                     </div>
-                    <h2 class="card-title">Notion 핵심 요약</h2>
-                    <p class="card-desc">체계적으로 텍스트 기반 핵심을 요약합니다.</p>
+                    <h2 class="card-title text-[1.35rem] max-[768px]:text-[1.2rem] font-extrabold text-[#111111] mb-[14px] max-[768px]:mb-[10px] tracking-[-0.01em]">Notion 핵심 요약</h2>
+                    <p class="card-desc text-[1rem] max-[768px]:text-[0.95rem] font-medium text-[#666666] leading-[1.6] break-keep">체계적으로 텍스트 기반 핵심을 요약합니다.</p>
                 </div>
 
                 <!-- 카드 3: 적극적인 활동 참여 -->
-                <div class="strategy-card">
-                    <div class="card-icon">
+                <div class="strategy-card bg-white border border-[#E5E8EB] rounded-[20px] p-[40px_30px] max-[768px]:p-[30px_20px] text-center shadow-[0_10px_30px_rgba(10,110,189,0.06)] hover:shadow-[0_20px_40px_rgba(10,110,189,0.12)] hover:-translate-y-[8px] hover:border-[#0A6EBD] flex flex-col items-center justify-center">
+                    <div class="card-icon w-[64px] h-[64px] max-[768px]:w-[56px] max-[768px]:h-[56px] flex items-center justify-center mb-[24px] max-[768px]:mb-[18px] text-[#0A6EBD]">
                         <!-- 적극적인 번개 기동 및 하이엔드 액션을 강조하는 번개(Bolt) 에너지 SVG -->
                         <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                         </svg>
                     </div>
-                    <h2 class="card-title">적극적인 활동 참여</h2>
-                    <p class="card-desc">먼저 다가가는 능동적인 참여를 실천합니다.</p>
+                    <h2 class="card-title text-[1.35rem] max-[768px]:text-[1.2rem] font-extrabold text-[#111111] mb-[14px] max-[768px]:mb-[10px] tracking-[-0.01em]">적극적인 활동 참여</h2>
+                    <p class="card-desc text-[1rem] max-[768px]:text-[0.95rem] font-medium text-[#666666] leading-[1.6] break-keep">먼저 다가가는 능동적인 참여를 실천합니다.</p>
                 </div>
 
                 <!-- 카드 4: 공식 플랫폼 활용 -->
-                <div class="strategy-card">
-                    <div class="card-icon">
+                <div class="strategy-card bg-white border border-[#E5E8EB] rounded-[20px] p-[40px_30px] max-[768px]:p-[30px_20px] text-center shadow-[0_10px_30px_rgba(10,110,189,0.06)] hover:shadow-[0_20px_40px_rgba(10,110,189,0.12)] hover:-translate-y-[8px] hover:border-[#0A6EBD] flex flex-col items-center justify-center">
+                    <div class="card-icon w-[64px] h-[64px] max-[768px]:w-[56px] max-[768px]:h-[56px] flex items-center justify-center mb-[24px] max-[768px]:mb-[18px] text-[#0A6EBD]">
                         <!-- 공식 시스템 브라우저 / 탭 구동을 직관적으로 보여주는 플랫폼 SVG -->
                         <svg width="100%" height="100%" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"></path>
                         </svg>
                     </div>
-                    <h2 class="card-title">공식 플랫폼 활용</h2>
-                    <p class="card-desc">SSAFY 공식 도구와 플랫폼을 적극적으로 활용합니다.</p>
+                    <h2 class="card-title text-[1.35rem] max-[768px]:text-[1.2rem] font-extrabold text-[#111111] mb-[14px] max-[768px]:mb-[10px] tracking-[-0.01em]">공식 플랫폼 활용</h2>
+                    <p class="card-desc text-[1rem] max-[768px]:text-[0.95rem] font-medium text-[#666666] leading-[1.6] break-keep">SSAFY 공식 도구와 플랫폼을 적극적으로 활용합니다.</p>
                 </div>
             </div>
         </div>

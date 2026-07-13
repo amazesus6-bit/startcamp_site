@@ -6,136 +6,40 @@
     <title>지훈의 SSAFY 생존 원칙 - 생활 루틴</title>
     <!-- 폰트: Pretendard -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <!-- Tailwind CSS Browser Play CDN (v4) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     
     <style>
-        :root {
-            /* 지정해주신 컬러 팔레트 */
-            --color-white: #FFFFFF;
-            --color-skyblue: #0A6EBD;
-            --color-skyblue-light: #EBF5FB;
-            --color-black: #111111;
-            --color-border: #E5E8EB;
-            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
-            
-            /* 생활 루틴 전용 내부 컬러 정의 */
-            --color-text-muted: #555555;
-            --color-shadow: rgba(10, 110, 189, 0.05);
-        }
-
-        /* 기본 여백 제거 및 폰트 적용 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            font-family: var(--font-main);
-            background-color: var(--color-white);
-            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 (실제 본문 적용 시 필요) */
-            padding-top: 60px; 
+            font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
         }
 
-        /* 공통 링크 스타일 제거 */
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
-        
-        ul {
-            list-style: none;
-        }
-
-        /* 상단 고정 네비게이션 바 레이아웃 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 60px;
-            background-color: var(--color-white);
-            border-bottom: 1px solid var(--color-border);
-            z-index: 1000;
-        }
-
-        /* 컨테이너 중앙 정렬 및 넓이 제한 */
-        .navbar-container {
-            max-width: 1024px;
-            margin: 0 auto;
-            padding: 0 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 100%;
-        }
-
-        /* 로고 영역 스타일 */
-        .navbar-logo {
-            font-size: 1.25rem;
-            font-weight: 800;
-            color: var(--color-black);
-            letter-spacing: -0.02em;
-        }
-
-        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
-        .navbar-menu {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* 개별 메뉴 항목 스타일 */
-        .nav-item {
-            display: block;
-            padding: 0 15px;
-            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--color-black);
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
-        .nav-item:hover,
-        .nav-item.active {
-            color: var(--color-skyblue);
-        }
-
-        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        /* active 메뉴 하단 밑줄 및 활성 상태 스타일 */
         .nav-item.active::after {
             content: "";
             position: absolute;
-            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            bottom: -1px;
             left: 15px;
             right: 15px;
             height: 3px;
-            background-color: var(--color-skyblue);
+            background-color: #0A6EBD;
             border-radius: 3px 3px 0 0;
         }
 
-        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
-        .navbar-toggle {
-            display: none;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            padding: 5px;
-            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        @media screen and (max-width: 768px) {
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
         }
 
-        /* 햄버거 버튼의 선(가로줄) 3개 */
+        /* 햄버거 아이콘 open 상태 애니메이션 */
         .navbar-toggle .bar {
-            display: block;
-            width: 24px;
-            height: 3px;
-            margin: 5px 0;
-            background-color: var(--color-black);
-            border-radius: 3px;
             transition: all 0.3s ease-in-out;
         }
-
-        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
         .navbar-toggle.open .bar:nth-child(1) {
             transform: translateY(8px) rotate(45deg);
         }
@@ -146,191 +50,17 @@
             transform: translateY(-8px) rotate(-45deg);
         }
 
-        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        /* 모바일 메뉴 show 상태 및 슬라이드 트랜지션 */
         @media screen and (max-width: 768px) {
-            .navbar-toggle {
-                display: block; /* 햄버거 버튼 표시 */
-            }
-
-            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
             .navbar-menu {
-                position: absolute;
-                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
-                left: 0;
-                width: 100%;
-                background-color: var(--color-white);
-                flex-direction: column;
-                gap: 0;
-                /* 슬라이드 다운 애니메이션을 위한 설정 */
-                max-height: 0;
-                overflow: hidden;
                 transition: max-height 0.4s ease-in-out;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
             }
-
-            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
             .navbar-menu.show {
-                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
-            }
-
-            /* 모바일 메뉴 항목 경계선 추가 */
-            .navbar-menu li {
-                width: 100%;
-                text-align: center;
-                border-bottom: 1px solid var(--color-border);
-            }
-
-            /* 마지막 항목 경계선 제거 */
-            .navbar-menu li:last-child {
-                border-bottom: none;
-            }
-
-            .nav-item {
-                line-height: normal;
-                padding: 20px 0;
-            }
-
-            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
-            .nav-item.active::after {
-                bottom: 12px;
-                left: 50%;
-                right: auto;
-                width: 80px;
-                transform: translateX(-50%);
-            }
-            
-            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
-            .nav-item.active {
-                background-color: var(--color-skyblue-light);
+                max-height: 350px;
             }
         }
-    </style>
 
-    <style>
-        /* 생활 루틴 콘텐츠 디자인 */
-        .routine-section {
-            width: 100%;
-            min-height: calc(100vh - 60px);
-            background-color: var(--color-skyblue-light);
-            padding: 80px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .routine-container {
-            max-width: 1024px;
-            width: 100%;
-            margin: 0 auto;
-            text-align: center;
-        }
-
-        /* 상단 소제목 */
-        .routine-subtitle {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--color-skyblue);
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        /* 메인 대제목 */
-        .routine-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--color-black);
-            margin-bottom: 50px;
-            letter-spacing: -0.03em;
-        }
-
-        /* 루틴 로우 레이아웃 (Grid) */
-        .routine-row {
-            display: grid;
-            gap: 20px;
-            margin-bottom: 24px;
-            width: 100%;
-        }
-
-        /* 월화수: 가로 3열 */
-        .routine-row-3 {
-            grid-template-columns: repeat(3, 1fr);
-        }
-
-        /* 목금토일: 가로 4열 */
-        .routine-row-4 {
-            grid-template-columns: repeat(4, 1fr);
-            margin-bottom: 0; /* 마지막 열 여백 제거 */
-        }
-
-        /* 루틴 카드 기본 디자인 */
-        .routine-card {
-            background-color: var(--color-white);
-            border: 1px solid var(--color-border);
-            border-radius: 20px;
-            padding: 30px 24px;
-            text-align: left;
-            box-shadow: 0 8px 24px var(--color-shadow);
-            transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
-                        border-color 0.3s ease, 
-                        box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        /* 카드 마우스 호버 확대 및 테두리 효과 */
-        .routine-card:hover {
-            transform: translateY(-6px) scale(1.03);
-            border-color: var(--color-skyblue);
-            box-shadow: 0 16px 32px rgba(10, 110, 189, 0.1);
-        }
-
-        /* 요일 배지 기본 공통 스타일 */
-        .routine-card .day {
-            display: inline-block;
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            letter-spacing: -0.01em;
-            line-height: 1;
-        }
-
-        /* 평일 요일 배지: 검은색 배경 + 흰색 글자 */
-        .routine-card .day-weekday {
-            background-color: var(--color-black);
-            color: var(--color-white);
-        }
-
-        /* 주말 요일 배지: 메인 파란색 배경 + 흰색 글자 */
-        .routine-card .day-weekend {
-            background-color: var(--color-skyblue);
-            color: var(--color-white);
-        }
-
-        /* 루틴 리스트 스타일 */
-        .routine-list {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        /* 정교하고 현대적인 글머리 기호(Bullet) 목록 정의 */
-        .routine-list li {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--color-text-muted);
-            line-height: 1.5;
-            position: relative;
-            padding-left: 20px;
-            word-break: keep-all;
-        }
-
-        /* 리스트 항목 앞의 간결한 메인 블루 포인트 dot 디자인 */
+        /* 루틴 목록의 원형 글머리표 */
         .routine-list li::before {
             content: "";
             position: absolute;
@@ -338,153 +68,118 @@
             top: 8px;
             width: 6px;
             height: 6px;
-            background-color: var(--color-skyblue);
+            background-color: #0A6EBD;
             border-radius: 50%;
-        }
-
-        /* 태블릿 및 모바일 반응형 가드레일 (최대 900px) */
-        @media screen and (max-width: 900px) {
-            .routine-section {
-                padding: 60px 16px;
-            }
-
-            .routine-title {
-                font-size: 2rem;
-                margin-bottom: 35px;
-            }
-
-            /* 모바일 환경에서는 3열 및 4열 그리드 모두 세로 1열 정렬 */
-            .routine-row-3, 
-            .routine-row-4 {
-                grid-template-columns: 1fr;
-                gap: 18px;
-            }
-
-            .routine-row-3 {
-                margin-bottom: 18px; /* 모바일에서 열 간 통일성 제공 */
-            }
-
-            .routine-card {
-                padding: 24px 20px;
-            }
-
-            .routine-card .day {
-                margin-bottom: 16px;
-            }
-
-            .routine-list li {
-                font-size: 0.9rem;
-            }
         }
     </style>
 </head>
-<body>
+<body class="bg-white pt-[60px] text-[#111111] overflow-x-hidden">
 
     <!-- ==== 복사 시작: 네비게이션 바 HTML (active 클래스는 "생활 루틴"에 고정 적용) ==== -->
-    <nav class="navbar">
-        <div class="navbar-container">
+    <nav class="navbar fixed top-0 left-0 w-full h-[60px] bg-white border-b border-[#E5E8EB] z-[1000]">
+        <div class="navbar-container max-w-[1024px] mx-auto px-[20px] flex justify-between items-center h-full">
             <!-- 1. 로고 -->
-            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            <a href="index.html" class="navbar-logo text-[1.25rem] font-extrabold text-[#111111] tracking-[-0.02em]">JIHUN SSAFY</a>
             
             <!-- 2. 모바일용 햄버거 버튼 -->
-            <button class="navbar-toggle" aria-label="메뉴 열기">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
+            <button class="navbar-toggle hidden max-[768px]:block bg-transparent border-none cursor-pointer p-[5px] z-[1001]" aria-label="메뉴 열기">
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
+                <span class="bar block w-[24px] h-[3px] my-[5px] mx-0 bg-[#111111] rounded-[3px]"></span>
             </button>
             
             <!-- 3. 페이지 메뉴 목록 (생활 루틴에만 active 클래스 적용) -->
-            <ul class="navbar-menu">
-                <li><a href="index.html" class="nav-item">홈</a></li>
-                <li><a href="strategy.html" class="nav-item">환경 전략</a></li>
-                <li><a href="principles.html" class="nav-item">학습 원칙</a></li>
-                <li><a href="routine.html" class="nav-item active">생활 루틴</a></li>
-                <li><a href="reminder.html" class="nav-item">다짐 리마인드</a></li>
+            <ul class="navbar-menu flex items-center gap-[10px] max-[768px]:absolute max-[768px]:top-[60px] max-[768px]:left-0 max-[768px]:w-full max-[768px]:bg-white max-[768px]:flex-col max-[768px]:gap-0 max-[768px]:max-h-0 max-[768px]:overflow-hidden max-[768px]:shadow-[0_10px_15px_-3px_rgba(0,0,0,0.1)]">
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="index.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">홈</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="strategy.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">환경 전략</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="principles.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">학습 원칙</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:border-b max-[768px]:border-[#E5E8EB]"><a href="routine.html" class="nav-item active block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#0A6EBD] max-[768px]:bg-[#EBF5FB] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">생활 루틴</a></li>
+                <li class="max-[768px]:w-full max-[768px]:text-center max-[768px]:last:border-b-0"><a href="reminder.html" class="nav-item block px-[15px] leading-[60px] text-[1rem] font-semibold text-[#111111] relative transition-colors duration-300 hover:text-[#0A6EBD] max-[768px]:line-height-normal max-[768px]:py-[20px] max-[768px]:px-0">다짐 리마인드</a></li>
             </ul>
         </div>
     </nav>
     <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
 
     <!-- ==== 생활 루틴 본문 콘텐츠 영역 ==== -->
-    <main class="routine-section">
-        <div class="routine-container">
+    <main class="routine-section w-full min-h-[calc(100vh-60px)] bg-[#EBF5FB] py-[80px] px-[20px] max-[900px]:py-[60px] max-[900px]:px-[16px] flex items-center justify-center">
+        <div class="routine-container max-w-[1024px] w-full mx-auto text-center">
             <!-- 영문 소제목 -->
-            <span class="routine-subtitle">Weekly Routine</span>
+            <span class="routine-subtitle text-[1.1rem] font-bold text-[#0A6EBD] uppercase tracking-[0.12em] mb-[12px] block">Weekly Routine</span>
             <!-- 메인 대제목 -->
-            <h1 class="routine-title">자취 생활 방어선</h1>
+            <h1 class="routine-title text-[2.5rem] font-extrabold text-[#111111] mb-[50px] max-[900px]:text-[2rem] max-[900px]:mb-[35px] tracking-[-0.03em]">자취 생활 방어선</h1>
 
             <!-- 첫 번째 줄: 월, 화, 수 (3열 구조) -->
-            <div class="routine-row routine-row-3">
+            <div class="routine-row routine-row-3 grid grid-cols-3 max-[900px]:grid-cols-1 gap-[20px] max-[900px]:gap-[18px] mb-[24px] max-[900px]:mb-[18px] w-full">
                 
                 <!-- 월요일 카드 -->
-                <div class="routine-card">
-                    <span class="day day-weekday">월요일</span>
-                    <ul class="routine-list">
-                        <li>테스트 대비</li>
-                        <li>배운 것 정리</li>
-                        <li>과제 완료</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekday inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#111111] text-white">월요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">테스트 대비</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">배운 것 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">과제 완료</li>
                     </ul>
                 </div>
 
                 <!-- 화요일 카드 -->
-                <div class="routine-card">
-                    <span class="day day-weekday">화요일</span>
-                    <ul class="routine-list">
-                        <li>배운 것 정리</li>
-                        <li>과제 완료</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekday inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#111111] text-white">화요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">배운 것 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">과제 완료</li>
                     </ul>
                 </div>
 
                 <!-- 수요일 카드 -->
-                <div class="routine-card">
-                    <span class="day day-weekday">수요일</span>
-                    <ul class="routine-list">
-                        <li>쓰레기 배출</li>
-                        <li>배운 것 정리</li>
-                        <li>과제 완료</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekday inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#111111] text-white">수요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">쓰레기 배출</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">배운 것 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">과제 완료</li>
                     </ul>
                 </div>
 
             </div>
 
             <!-- 두 번째 줄: 목, 금, 토, 일 (4열 구조) -->
-            <div class="routine-row routine-row-4">
+            <div class="routine-row routine-row-4 grid grid-cols-4 max-[900px]:grid-cols-1 gap-[20px] max-[900px]:gap-[18px] mb-0 w-full">
 
                 <!-- 목요일 카드 -->
-                <div class="routine-card">
-                    <span class="day day-weekday">목요일</span>
-                    <ul class="routine-list">
-                        <li>배운 것 정리</li>
-                        <li>과제 완료</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekday inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#111111] text-white">목요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">배운 것 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">과제 완료</li>
                     </ul>
                 </div>
 
                 <!-- 금요일 카드 -->
-                <div class="routine-card">
-                    <span class="day day-weekday">금요일</span>
-                    <ul class="routine-list">
-                        <li>배운 것 정리</li>
-                        <li>과제 완료</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekday inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#111111] text-white">금요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">배운 것 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">과제 완료</li>
                     </ul>
                 </div>
 
                 <!-- 토요일 카드 (주말 디자인 적용) -->
-                <div class="routine-card">
-                    <span class="day day-weekend">토요일</span>
-                    <ul class="routine-list">
-                        <li>청소 및 빨래</li>
-                        <li>일주일 학습 총정리</li>
-                        <li>게임과 휴식</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekend inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#0A6EBD] text-white">토요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">청소 및 빨래</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">일주일 학습 총정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">게임과 휴식</li>
                     </ul>
                 </div>
 
                 <!-- 일요일 카드 (주말 디자인 적용) -->
-                <div class="routine-card">
-                    <span class="day day-weekend">일요일</span>
-                    <ul class="routine-list">
-                        <li>건조기 정리</li>
-                        <li>일주일 학습 총정리</li>
-                        <li>시험공부</li>
+                <div class="routine-card bg-white border border-[#E5E8EB] rounded-[20px] p-[30px_24px] max-[900px]:p-[24px_20px] text-left shadow-[0_8px_24px_rgba(10,110,189,0.05)] transition-all duration-300 ease-in-out hover:translate-y-[-6px] hover:scale-[1.03] hover:border-[#0A6EBD] hover:shadow-[0_16px_32px_rgba(10,110,189,0.1)] flex flex-col items-start">
+                    <span class="day day-weekend inline-block px-[16px] py-[6px] rounded-[30px] text-[0.85rem] font-extrabold mb-[20px] max-[900px]:mb-[16px] tracking-[-0.01em] leading-none bg-[#0A6EBD] text-white">일요일</span>
+                    <ul class="routine-list w-full flex flex-col gap-[12px]">
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">건조기 정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">일주일 학습 총정리</li>
+                        <li class="text-[0.95rem] max-[900px]:text-[0.9rem] font-semibold text-[#555555] leading-[1.5] relative pl-[20px] break-keep">시험공부</li>
                     </ul>
                 </div>
 
