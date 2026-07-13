@@ -268,76 +268,43 @@
             word-break: keep-all;
         }
 
-        /* SSAFY 점프 챌린지 미니게임 전용 카드 레이아웃 */
-        .game-card {
+        /* [수정] 크롬 오프라인 스타일의 완전한 미니멀리즘 게임 컨테이너 */
+        .game-minimal-container {
             width: 100%;
             max-width: 480px;
-            background-color: var(--color-white);
-            color: var(--color-black);
-            padding: 24px;
-            border-radius: 20px;
-            border: 1px solid var(--color-border);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            transition: transform 0.3s ease;
-        }
-
-        .game-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .game-header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            margin-bottom: 14px;
+            margin-top: 20px;
         }
 
-        .game-title {
-            font-size: 1.15rem;
-            font-weight: 800;
-            color: var(--color-black);
-            letter-spacing: -0.02em;
-        }
-
-        .game-subtitle {
-            font-size: 0.8rem;
-            color: var(--color-skyblue);
-            font-weight: 700;
-            background-color: var(--color-skyblue-light);
-            padding: 4px 10px;
-            border-radius: 30px;
-        }
-
-        /* 실제 런게임 게임화면 영역 */
+        /* [수정] 테두리, 배경, 그림자를 모두 제외한 순수한 게임화면 */
         .game-screen {
             position: relative;
             width: 100%;
-            height: 170px;
-            background-color: var(--color-skyblue-light);
-            border: 2px solid var(--color-border);
-            border-radius: 12px;
+            height: 150px;
+            background-color: transparent;
             overflow: hidden;
             display: flex;
             align-items: flex-end;
         }
 
-        /* 런게임 바닥 경계선 (SSAFY 메인 컬러 적용) */
+        /* [수정] 런게임 바닥 경계선 (수평선 단일 라인으로 단순화) */
         .game-floor {
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 10px;
-            background-color: var(--color-skyblue);
+            height: 2px;
+            background-color: var(--color-white);
             z-index: 4;
         }
 
-        /* 런게임 캐릭터 (SSAFY 교육생 상징 이모지) */
+        /* [수정] 캐릭터 이모지 포지셔닝 조정 (바닥선 바로 위 안착) */
         #game-character {
             position: absolute;
-            left: 45px;
-            bottom: 10px; /* 바닥 바로 위에 위치 */
+            left: 50px;
+            bottom: 2px;
             width: 36px;
             height: 36px;
             font-size: 32px;
@@ -347,11 +314,11 @@
             transition: transform 0.05s linear;
         }
 
-        /* 런게임 장애물 (과제 📝, 오류 🐛, 시험 ❌ 무작위) */
+        /* [수정] 장애물 이모지 포지셔닝 조정 (바닥선 바로 위 안착) */
         #game-obstacle {
             position: absolute;
             left: 100%;
-            bottom: 10px; /* 바닥 바로 위에 위치 */
+            bottom: 2px;
             width: 34px;
             height: 34px;
             font-size: 30px;
@@ -360,120 +327,67 @@
             z-index: 5;
         }
 
-        /* 실시간 몰입 점수 계기판 */
-        .score-board {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--color-border);
-            padding: 4px 10px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            color: var(--color-black);
-            z-index: 6;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        /* 안내 문구 및 충돌 경고 레이어 */
+        /* [수정] 안내 및 알림 문구용 오버레이 영역 */
         .game-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(235, 245, 251, 0.9);
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             z-index: 7;
-            padding: 16px;
             text-align: center;
         }
 
         .game-overlay-text {
-            font-size: 0.95rem;
+            font-size: 1.05rem;
             font-weight: 800;
-            color: var(--color-black);
-            margin-bottom: 8px;
+            color: var(--color-white);
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
             word-break: keep-all;
             line-height: 1.4;
+            animation: pulse 1.5s infinite;
         }
 
-        .game-overlay-sub {
-            font-size: 0.8rem;
-            color: #555555;
-            font-weight: 500;
-        }
-
-        /* 게임 컨트롤 컨트롤러 영역 */
-        .game-controls {
-            display: flex;
-            gap: 12px;
-            margin-top: 16px;
-        }
-
-        /* 직관적인 컨트롤을 위해 설계된 버튼 인터페이스 (터치 영역 확보) */
-        .game-btn {
-            flex: 1;
-            padding: 15px 20px;
-            font-size: 1rem;
+        /* [수정] 단일 기능 통합 버튼 스타일 */
+        .game-action-btn {
+            background-color: var(--color-white);
+            color: var(--color-black);
+            padding: 15px 45px;
+            font-size: 1.05rem;
             font-weight: 800;
             border: none;
-            border-radius: 12px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             outline: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            /* 모바일 더블탭 줌 및 클릭 딜레이 완화 */
+            gap: 8px;
+            margin-top: 25px;
             touch-action: manipulation; 
         }
 
-        /* 게임 시작 버튼: 다크 테마 */
-        .btn-start {
-            background-color: var(--color-black);
-            color: var(--color-white);
-            box-shadow: 0 4px 12px rgba(17, 17, 17, 0.15);
-        }
-
-        .btn-start:hover {
-            background-color: #222222;
+        .game-action-btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(0, 0, 0, 0.3);
+            background-color: var(--color-skyblue-light);
+            color: var(--color-skyblue);
         }
 
-        .btn-start:active {
+        .game-action-btn:active {
             transform: translateY(0);
         }
 
-        /* 점프 버튼: 블루 포인트 컬러 */
-        .btn-jump {
-            background-color: var(--color-skyblue);
-            color: var(--color-white);
-            box-shadow: 0 4px 12px rgba(10, 110, 189, 0.2);
-        }
-
-        .btn-jump:hover {
-            background-color: #085fa3;
-            transform: translateY(-2px);
-        }
-
-        .btn-jump:active {
-            transform: translateY(0);
-        }
-
-        /* 비활성화(disabled) 상태의 정제된 스타일링 */
-        .game-btn:disabled {
-            background-color: #E5E8EB;
-            color: #9CA3AF;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: none !important;
-            opacity: 0.7;
+        /* 안내 문구 고동치는 효과 */
+        @keyframes pulse {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; transform: scale(1.02); }
+            100% { opacity: 0.8; }
         }
 
         /* 페이드업 애니메이션 */
@@ -485,17 +399,6 @@
             to {
                 opacity: 1;
                 transform: translateY(0);
-            }
-        }
-
-        /* 모바일 대응 미세 조정 */
-        @media screen and (max-width: 480px) {
-            .game-card {
-                padding: 16px;
-            }
-            .game-btn {
-                padding: 14px 12px;
-                font-size: 0.95rem;
             }
         }
     </style>
@@ -538,48 +441,28 @@
             <!-- 설명 문구 -->
             <p class="hero-description">타협 없는 몰입, 지훈의 SSAFY 1년 성장 각오</p>
             
-            <!-- SSAFY 점프 챌린지 미니게임 컴포넌트 -->
-            <div class="game-card">
-                <div class="game-header">
-                    <span class="game-title">SSAFY 점프 챌린지 🏃</span>
-                    <span class="game-subtitle">미니런 게임</span>
-                </div>
-
+            <!-- [수정] 백그라운드 카드 없는 미니멀 구조의 공룡 게임 영역 -->
+            <div class="game-minimal-container">
                 <div class="game-screen" id="game-screen">
-                    <!-- 바닥 방어선 -->
+                    <!-- 바닥 방어선 (수평선 단일 라인) -->
                     <div class="game-floor"></div>
 
-                    <!-- 캐릭터 (개발 중인 SSAFY 교육생) -->
+                    <!-- 캐릭터 (SSAFY 교육생 상징 이모지) -->
                     <div id="game-character">🧑‍💻</div>
 
                     <!-- 실시간으로 오른쪽에서 돌진해오는 장애물 -->
                     <div id="game-obstacle">📝</div>
 
-                    <!-- 실시간 점수판 -->
-                    <div class="score-board" id="game-score-board">몰입 점수: 0</div>
-
-                    <!-- 오버레이 안내 레이어 (게임 시작 전 / 게임 종료 시 작동) -->
+                    <!-- [수정] 상시 노출 상태 안내 오버레이 -->
                     <div class="game-overlay" id="game-overlay">
                         <div class="game-overlay-text" id="game-overlay-text">게임 시작 버튼을 눌러 도전하세요</div>
-                        <div class="game-overlay-sub" id="game-overlay-sub">장애물(과제, 버그, 시험)을 뛰어넘으세요!</div>
                     </div>
                 </div>
 
-                <!-- 조작 물리 컨트롤러 (키보드 및 스마트폰 터치 전용 버튼 완비) -->
-                <div class="game-controls">
-                    <button class="game-btn btn-start" id="btn-start">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"></path>
-                        </svg>
-                        게임 시작
-                    </button>
-                    <button class="game-btn btn-jump" id="btn-jump" disabled>
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                        점프
-                    </button>
-                </div>
+                <!-- [수정] 단일 기능 컨트롤러 버튼 -->
+                <button class="game-action-btn" id="btn-action">
+                    게임 시작
+                </button>
             </div>
         </div>
     </main>
@@ -616,33 +499,28 @@
             const gameScreen = document.getElementById('game-screen');
             const character = document.getElementById('game-character');
             const obstacle = document.getElementById('game-obstacle');
-            const scoreBoard = document.getElementById('game-score-board');
             const overlay = document.getElementById('game-overlay');
             const overlayText = document.getElementById('game-overlay-text');
-            const overlaySub = document.getElementById('game-overlay-sub');
-            const btnStart = document.getElementById('btn-start');
-            const btnJump = document.getElementById('btn-jump');
+            const btnAction = document.getElementById('btn-action');
 
             // 게임 플레이 핵심 상태 관리 변수
             let isPlaying = false;
-            let score = 0;
             let gameLoopRequest = null;
-            let scoreInterval = null;
 
             // 중력 및 점프 물리 연산 파라미터 (60fps 기반의 Euler 연산 구현)
             const gravity = 0.55;           // 하강 견인 물리 속도
-            const jumpStrength = 10.5;      // 캐릭터 최초 점프 탄성
-            let charY = 0;                  // 바닥으로부터의 캐릭터 Y축 높이 (px)
+            const jumpStrength = 11.5;      // 캐릭터 최초 점프 탄성 (미니멀 화면 규격 상향 조정)
+            let charY = 0;                  // 바닥선(2px) 위 캐릭터의 Y축 높이 (px)
             let charVelocityY = 0;          // 캐릭터 수직 속도
             let isJumping = false;          // 점프 중복 발생 제어 플래그
 
             // 장애물 연산 전용 상태 변수
             let obstacleX = 0;              // 장애물의 수평 X축 좌표 (px)
-            let obstacleSpeed = 4.2;        // 장애물의 돌진 속도 (난이도에 따라 동적 가속)
+            const obstacleSpeed = 5.2;      // 크롬 공룡 게임 느낌의 고정적 쾌속 스크롤링
             let currentObstacleEmoji = '📝'; // 현재 화면에 등장한 위협 요소 이모지
 
-            // SSAFY 장애물 리스트 (과제, 오류, 시험)
-            const obstaclePool = ['📝', '🐛', '🔥', '💻', '💣', '❌', '⚠️'];
+            // [수정] 위협 요소 이모지 풀 (과제 📝, 오류 🐛, 시험 ❌, 버그 ⚠️, 경고 🔥)
+            const obstaclePool = ['📝', '🐛', '❌', '⚠️', '🔥'];
 
             // 1. 캐릭터 점프 액션 연산 함수
             function triggerJump() {
@@ -660,15 +538,15 @@
                     charVelocityY -= gravity; // 중력 누적 반영
                     charY += charVelocityY;   // Y 위치 이동
 
-                    // 바닥에 안착했는지 검사
+                    // 바닥선(bottom: 2px) 위에 착지했는지 검사
                     if (charY <= 0) {
                         charY = 0;
                         charVelocityY = 0;
                         isJumping = false;
                     }
                 }
-                // 캐릭터 Y축 포지션 DOM 갱신 (floor 높이 10px 마진 보정)
-                character.style.bottom = (10 + charY) + 'px';
+                // 캐릭터 Y축 포지션 DOM 갱신 (바닥선 2px 위 기준)
+                character.style.bottom = (2 + charY) + 'px';
 
                 // [B] 장애물 스크롤링 물리 계산
                 obstacleX -= obstacleSpeed;
@@ -678,26 +556,20 @@
                     const randomIndex = Math.floor(Math.random() * obstaclePool.length);
                     currentObstacleEmoji = obstaclePool[randomIndex];
                     obstacle.textContent = currentObstacleEmoji;
-
-                    // 플레이 타임(점수)에 비례한 점진적 강제 기동 속도 스케일링
-                    obstacleSpeed = 4.2 + Math.floor(score / 150) * 0.45;
-                    if (obstacleSpeed > 10) obstacleSpeed = 10; // 플레이 한계 속도 가드레일 작동
                 }
                 // 장애물 X축 포지션 DOM 갱신
                 obstacle.style.left = obstacleX + 'px';
 
-                // [C] 정확하고 자비로운 히트박스(Hitbox) 판정 시스템
-                // 캐릭터 바운딩 좌표 (X축 고정값)
-                const charLeft = 45 + 5;           // 판정 자비 픽셀 추가
-                const charRight = 45 + 36 - 5;
-                const charHeight = 34;             // 판정 높이
+                // [C] 크롬 공룡 스타일 전용 정밀 충돌 판정 시스템
+                const charLeft = 50 + 6;           // X좌표 오프셋 보정 마진
+                const charRight = 50 + 36 - 6;
+                const charHeight = 36;
 
-                // 장애물 실시간 실측 좌표
                 const obsLeft = obstacleX + 5;
                 const obsRight = obstacleX + 34 - 5;
-                const obsHeight = 30;              // 장애물의 수직 상단 위협 높이
+                const obsHeight = 30;              // 위협 높이 가중치 판정
 
-                // 2D 직사각형 실시간 충돌 교차 조건 연산
+                // X축과 Y축 충돌 교차 조건 연산
                 const hasOverlapX = (charRight > obsLeft) && (charLeft < obsRight);
                 const hasOverlapY = (charY < obsHeight);
 
@@ -711,74 +583,62 @@
                 gameLoopRequest = requestAnimationFrame(updateFrame);
             }
 
-            // 3. 게임 시작 함수 (State & Button Controls)
+            // 3. 게임 시작 함수 (State & Single Button Controls)
             function startGame() {
-                if (isPlaying) return; // 중복 실시간 실행 방지 보안 가드레일
+                if (isPlaying) return; // 중복 플레이 가드레일 작동
 
                 // 상태 초기화
                 isPlaying = true;
-                score = 0;
                 charY = 0;
                 charVelocityY = 0;
                 isJumping = false;
-                obstacleSpeed = 4.2;
                 
-                // 디바이스의 너비에 맞게 장애물 스타트 포지션 초기화
+                // 장애물 시작 포지션을 우측 너비 한계 밖으로 리셋
                 obstacleX = gameScreen.clientWidth;
                 obstacle.textContent = obstaclePool[Math.floor(Math.random() * obstaclePool.length)];
 
-                // DOM 갱신
-                scoreBoard.textContent = '몰입 점수: 0';
-                overlay.style.display = 'none'; // 오버레이 스크린 오프
+                // [수정] 안내 오버레이 숨기기 및 물리 캐릭터 원위치 리셋
+                overlay.style.display = 'none';
+                character.style.bottom = '2px';
+                obstacle.style.left = obstacleX + 'px';
 
-                // 버튼 컨트롤 활성화 상태 정의
-                btnStart.disabled = true;
-                btnJump.disabled = false;
+                // [수정] 단일 액션 버튼을 즉시 "점프" 문구로 변경
+                btnAction.textContent = '점프';
 
-                // 물리 엔진 가동 및 몰입 점수 시계 연동 (100ms당 1점 누적)
+                // 60fps 바닐라 드로우 프레임 가동
                 updateFrame();
-                scoreInterval = setInterval(() => {
-                    score += 1;
-                    scoreBoard.textContent = `몰입 점수: ${score}`;
-                }, 100);
             }
 
             // 4. 게임 오버 처리 함수
             function handleGameOver() {
                 isPlaying = false;
 
-                // 루프 타이머 및 애니메이션 취소
+                // [수정] 애니메이션 프레임 중단으로 장애물 그 자리에 멈추기
                 if (gameLoopRequest) cancelAnimationFrame(gameLoopRequest);
-                if (scoreInterval) clearInterval(scoreInterval);
 
-                // UI 메시지 변경 및 활성화
-                overlayText.innerHTML = `<span style="color: #e11d48; font-size: 1.1rem; display: block; margin-bottom: 4px;">실패해도 다시 도전!</span>최종 몰입 점수: <span style="color: var(--color-skyblue); font-size:1.1rem;">${score}</span>`;
-                overlaySub.textContent = '게임 시작 버튼을 눌러 다시 도전하세요.';
+                // [수정] 실패 메시지 레이어 띄우기 및 버튼 문구 복원
+                overlayText.textContent = '실패해도 다시 도전!';
                 overlay.style.display = 'flex';
-
-                // 버튼 컨트롤 원복
-                btnStart.disabled = false;
-                btnJump.disabled = true;
-                btnStart.focus(); // 터치/키보드 재조작 접근성 지원
+                btnAction.textContent = '게임 시작';
             }
 
             // ==== 조작 바인딩 레이어 ====
 
-            // [A] 게임 시작 제어 장치
-            btnStart.addEventListener('click', () => {
-                startGame();
+            // [수정] 단일 버튼 하나로 시작 & 점프를 동시 바인딩 처리
+            btnAction.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (!isPlaying) {
+                    startGame();
+                } else {
+                    triggerJump();
+                }
             });
 
-            // [B] 스크린 내 점프 물리 버튼 전용 바인딩
-            btnJump.addEventListener('click', () => {
-                triggerJump();
-            });
-
-            // [C] 데스크톱 전용 단축키 입력 장치 (Space 또는 위쪽 방향키)
+            // [수정] PC 키보드 유저를 위한 단축키 대응 (Space, ArrowUp)
             window.addEventListener('keydown', (e) => {
                 if (e.code === 'Space' || e.code === 'ArrowUp') {
                     if (isPlaying) {
-                        e.preventDefault(); // 웹 브라우저 스크롤 하강 기본 기동 방지
+                        e.preventDefault(); // 브라우저 창 스크롤 방지
                         triggerJump();
                     }
                 }
