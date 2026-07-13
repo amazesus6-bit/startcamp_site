@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지훈의 SSAFY 생존 원칙 - 홈</title>
+    <!-- 폰트: Pretendard -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    
+    <style>
+        :root {
+            /* 지정해주신 컬러 팔레트 */
+            --color-white: #FFFFFF;
+            --color-skyblue: #0A6EBD;
+            --color-skyblue-light: #EBF5FB;
+            --color-black: #111111;
+            --color-border: #E5E8EB;
+            --font-main: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            
+            /* 히어로 섹션 전용 파란색 톤 업 그래디언트 */
+            --color-skyblue-gradient: radial-gradient(circle at 50% 50%, #1583db 0%, #0A6EBD 100%);
+        }
+
+        /* 기본 여백 제거 및 폰트 적용 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-main);
+            background-color: var(--color-white);
+            /* 네비게이션 바가 fixed일 경우 본문 내용이 가려지지 않도록 상단 여백 확보 */
+            padding-top: 60px; 
+            overflow-x: hidden;
+        }
+
+        /* 공통 링크 스타일 제거 */
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        ul {
+            list-style: none;
+        }
+
+        /* 상단 고정 네비게이션 바 레이아웃 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: var(--color-white);
+            border-bottom: 1px solid var(--color-border);
+            z-index: 1000;
+        }
+
+        /* 컨테이너 중앙 정렬 및 넓이 제한 */
+        .navbar-container {
+            max-width: 1024px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        /* 로고 영역 스타일 */
+        .navbar-logo {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        /* 데스크톱 메뉴 가로 배치 (Flexbox) */
+        .navbar-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 개별 메뉴 항목 스타일 */
+        .nav-item {
+            display: block;
+            padding: 0 15px;
+            line-height: 60px; /* 네비게이션 바 높이와 동일하게 맞춰 세로 중앙 정렬 및 클릭 영역 확보 */
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--color-black);
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        /* 메뉴 호버 및 활성화(active) 상태: 메인 파란색 적용 */
+        .nav-item:hover,
+        .nav-item.active {
+            color: var(--color-skyblue);
+        }
+
+        /* 활성화(active) 상태 하단 밑줄 애니메이션/스타일 */
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            bottom: -1px; /* border-bottom을 덮도록 설정 */
+            left: 15px;
+            right: 15px;
+            height: 3px;
+            background-color: var(--color-skyblue);
+            border-radius: 3px 3px 0 0;
+        }
+
+        /* 햄버거 메뉴 버튼 (데스크톱에서는 숨김) */
+        .navbar-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 1001; /* 모바일 메뉴보다 위로 오도록 설정 */
+        }
+
+        /* 햄버거 버튼의 선(가로줄) 3개 */
+        .navbar-toggle .bar {
+            display: block;
+            width: 24px;
+            height: 3px;
+            margin: 5px 0;
+            background-color: var(--color-black);
+            border-radius: 3px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* 햄버거 메뉴 열림 시 X 표시 애니메이션 */
+        .navbar-toggle.open .bar:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+        .navbar-toggle.open .bar:nth-child(2) {
+            opacity: 0;
+        }
+        .navbar-toggle.open .bar:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        /* 모바일 레이아웃: 768px 이하에서 동작 */
+        @media screen and (max-width: 768px) {
+            .navbar-toggle {
+                display: block; /* 햄버거 버튼 표시 */
+            }
+
+            /* 모바일 메뉴 세로 배치 및 초기 숨김 상태 */
+            .navbar-menu {
+                position: absolute;
+                top: 60px; /* 네비게이션 바 높이 바로 아래부터 시작 */
+                left: 0;
+                width: 100%;
+                background-color: var(--color-white);
+                flex-direction: column;
+                gap: 0;
+                /* 슬라이드 다운 애니메이션을 위한 설정 */
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.4s ease-in-out;
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            }
+
+            /* 햄버거 메뉴 클릭 시 메뉴 활성화 (JS로 제어) */
+            .navbar-menu.show {
+                max-height: 350px; /* 메뉴 항목을 넉넉히 감쌀 수 있는 높이 */
+            }
+
+            /* 모바일 메뉴 항목 경계선 추가 */
+            .navbar-menu li {
+                width: 100%;
+                text-align: center;
+                border-bottom: 1px solid var(--color-border);
+            }
+
+            /* 마지막 항목 경계선 제거 */
+            .navbar-menu li:last-child {
+                border-bottom: none;
+            }
+
+            .nav-item {
+                line-height: normal;
+                padding: 20px 0;
+            }
+
+            /* 모바일 환경 활성화 밑줄 길이 및 위치 조정 */
+            .nav-item.active::after {
+                bottom: 12px;
+                left: 50%;
+                right: auto;
+                width: 80px;
+                transform: translateX(-50%);
+            }
+            
+            /* 모바일에서 활성화된 메뉴는 배경색으로도 추가 강조 */
+            .nav-item.active {
+                background-color: var(--color-skyblue-light);
+            }
+        }
+    </style>
+
+    <style>
+        /* 네비게이션 바를 제외한 화면 크기를 충분히 채우고 스크롤이 매끄럽도록 세팅 */
+        .hero-section {
+            min-height: calc(100vh - 60px);
+            width: 100%;
+            background: var(--color-skyblue-gradient);
+            color: var(--color-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            padding: 40px 20px;
+        }
+
+        /* 기하학 디자인 도트 패턴 */
+        .hero-background-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.08;
+            pointer-events: none;
+            background-image: radial-gradient(circle, var(--color-white) 1.5px, transparent 1.5px);
+            background-size: 32px 32px;
+        }
+
+        .hero-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* 큰 제목 스타일 (반응형 클램프 적용) */
+        .hero-title {
+            font-size: clamp(3.5rem, 10vw, 6.5rem);
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            user-select: none;
+        }
+
+        /* 설명 문구 스타일 */
+        .hero-description {
+            font-size: clamp(1rem, 2.5vw, 1.4rem);
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: rgba(255, 255, 255, 0.95);
+            letter-spacing: -0.01em;
+            word-break: keep-all;
+        }
+
+        /* SSAFY 점프 챌린지 미니게임 전용 카드 레이아웃 */
+        .game-card {
+            width: 100%;
+            max-width: 480px;
+            background-color: var(--color-white);
+            color: var(--color-black);
+            padding: 24px;
+            border-radius: 20px;
+            border: 1px solid var(--color-border);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            text-align: left;
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .game-title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--color-black);
+            letter-spacing: -0.02em;
+        }
+
+        .game-subtitle {
+            font-size: 0.8rem;
+            color: var(--color-skyblue);
+            font-weight: 700;
+            background-color: var(--color-skyblue-light);
+            padding: 4px 10px;
+            border-radius: 30px;
+        }
+
+        /* 실제 런게임 게임화면 영역 */
+        .game-screen {
+            position: relative;
+            width: 100%;
+            height: 170px;
+            background-color: var(--color-skyblue-light);
+            border: 2px solid var(--color-border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: flex-end;
+        }
+
+        /* 런게임 바닥 경계선 (SSAFY 메인 컬러 적용) */
+        .game-floor {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background-color: var(--color-skyblue);
+            z-index: 4;
+        }
+
+        /* 런게임 캐릭터 (SSAFY 교육생 상징 이모지) */
+        #game-character {
+            position: absolute;
+            left: 45px;
+            bottom: 10px; /* 바닥 바로 위에 위치 */
+            width: 36px;
+            height: 36px;
+            font-size: 32px;
+            line-height: 36px;
+            text-align: center;
+            z-index: 5;
+            transition: transform 0.05s linear;
+        }
+
+        /* 런게임 장애물 (과제 📝, 오류 🐛, 시험 ❌ 무작위) */
+        #game-obstacle {
+            position: absolute;
+            left: 100%;
+            bottom: 10px; /* 바닥 바로 위에 위치 */
+            width: 34px;
+            height: 34px;
+            font-size: 30px;
+            line-height: 34px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        /* 실시간 몰입 점수 계기판 */
+        .score-board {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--color-border);
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--color-black);
+            z-index: 6;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        /* 안내 문구 및 충돌 경고 레이어 */
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(235, 245, 251, 0.9);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 7;
+            padding: 16px;
+            text-align: center;
+        }
+
+        .game-overlay-text {
+            font-size: 0.95rem;
+            font-weight: 800;
+            color: var(--color-black);
+            margin-bottom: 8px;
+            word-break: keep-all;
+            line-height: 1.4;
+        }
+
+        .game-overlay-sub {
+            font-size: 0.8rem;
+            color: #555555;
+            font-weight: 500;
+        }
+
+        /* 게임 컨트롤 컨트롤러 영역 */
+        .game-controls {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        /* 직관적인 컨트롤을 위해 설계된 버튼 인터페이스 (터치 영역 확보) */
+        .game-btn {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 1rem;
+            font-weight: 800;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            /* 모바일 더블탭 줌 및 클릭 딜레이 완화 */
+            touch-action: manipulation; 
+        }
+
+        /* 게임 시작 버튼: 다크 테마 */
+        .btn-start {
+            background-color: var(--color-black);
+            color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(17, 17, 17, 0.15);
+        }
+
+        .btn-start:hover {
+            background-color: #222222;
+            transform: translateY(-2px);
+        }
+
+        .btn-start:active {
+            transform: translateY(0);
+        }
+
+        /* 점프 버튼: 블루 포인트 컬러 */
+        .btn-jump {
+            background-color: var(--color-skyblue);
+            color: var(--color-white);
+            box-shadow: 0 4px 12px rgba(10, 110, 189, 0.2);
+        }
+
+        .btn-jump:hover {
+            background-color: #085fa3;
+            transform: translateY(-2px);
+        }
+
+        .btn-jump:active {
+            transform: translateY(0);
+        }
+
+        /* 비활성화(disabled) 상태의 정제된 스타일링 */
+        .game-btn:disabled {
+            background-color: #E5E8EB;
+            color: #9CA3AF;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+            opacity: 0.7;
+        }
+
+        /* 페이드업 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 모바일 대응 미세 조정 */
+        @media screen and (max-width: 480px) {
+            .game-card {
+                padding: 16px;
+            }
+            .game-btn {
+                padding: 14px 12px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==== 복사 시작: 네비게이션 바 HTML ==== -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <!-- 1. 로고 -->
+            <a href="index.html" class="navbar-logo">JIHUN SSAFY</a>
+            
+            <!-- 2. 모바일용 햄버거 버튼 -->
+            <button class="navbar-toggle" aria-label="메뉴 열기">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
+            
+            <!-- 3. 페이지 메뉴 목록 (홈 메뉴에만 active 클래스 지정) -->
+            <ul class="navbar-menu">
+                <li><a href="index.html" class="nav-item active">홈</a></li>
+                <li><a href="strategy.html" class="nav-item">환경 전략</a></li>
+                <li><a href="principles.html" class="nav-item">학습 원칙</a></li>
+                <li><a href="routine.html" class="nav-item">생활 루틴</a></li>
+                <li><a href="reminder.html" class="nav-item">다짐 리마인드</a></li>
+            </ul>
+        </div>
+    </nav>
+    <!-- ==== 복사 끝: 네비게이션 바 HTML ==== -->
+
+    <!-- ==== 메인 홈 비주얼 영역 (히어로 섹션) ==== -->
+    <main class="hero-section">
+        <!-- 배경 디테일 레이어 -->
+        <div class="hero-background-pattern"></div>
+        
+        <div class="hero-container">
+            <!-- 큰 제목 -->
+            <h1 class="hero-title">SSAFY</h1>
+            <!-- 설명 문구 -->
+            <p class="hero-description">타협 없는 몰입, 지훈의 SSAFY 1년 성장 각오</p>
+            
+            <!-- SSAFY 점프 챌린지 미니게임 컴포넌트 -->
+            <div class="game-card">
+                <div class="game-header">
+                    <span class="game-title">SSAFY 점프 챌린지 🏃</span>
+                    <span class="game-subtitle">미니런 게임</span>
+                </div>
+
+                <div class="game-screen" id="game-screen">
+                    <!-- 바닥 방어선 -->
+                    <div class="game-floor"></div>
+
+                    <!-- 캐릭터 (개발 중인 SSAFY 교육생) -->
+                    <div id="game-character">🧑‍💻</div>
+
+                    <!-- 실시간으로 오른쪽에서 돌진해오는 장애물 -->
+                    <div id="game-obstacle">📝</div>
+
+                    <!-- 실시간 점수판 -->
+                    <div class="score-board" id="game-score-board">몰입 점수: 0</div>
+
+                    <!-- 오버레이 안내 레이어 (게임 시작 전 / 게임 종료 시 작동) -->
+                    <div class="game-overlay" id="game-overlay">
+                        <div class="game-overlay-text" id="game-overlay-text">게임 시작 버튼을 눌러 도전하세요</div>
+                        <div class="game-overlay-sub" id="game-overlay-sub">장애물(과제, 버그, 시험)을 뛰어넘으세요!</div>
+                    </div>
+                </div>
+
+                <!-- 조작 물리 컨트롤러 (키보드 및 스마트폰 터치 전용 버튼 완비) -->
+                <div class="game-controls">
+                    <button class="game-btn btn-start" id="btn-start">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.348a1.125 1.125 0 010 1.971l-11.54 6.347a1.125 1.125 0 01-1.667-.985V5.653z"></path>
+                        </svg>
+                        게임 시작
+                    </button>
+                    <button class="game-btn btn-jump" id="btn-jump" disabled>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 11.25l-3-3m0 0l-3 3m3-3v7.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        점프
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ==== 복사 시작: 모바일 네비게이션 스크립트 ==== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.querySelector('.navbar-toggle');
+            const menu = document.querySelector('.navbar-menu');
+
+            // 햄버거 버튼 클릭 이벤트 리스너
+            toggleButton.addEventListener('click', () => {
+                // 메뉴 보이기/숨기기 토글
+                menu.classList.toggle('show');
+                // 햄버거 아이콘 X 모양 변환 토글
+                toggleButton.classList.toggle('open');
+            });
+
+            // 화면 너비가 넓어지면(PC버전) 모바일 메뉴 초기화
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 768) {
+                    menu.classList.remove('show');
+                    toggleButton.classList.remove('open');
+                }
+            });
+        });
+    </script>
+    <!-- ==== 복사 끝: 모바일 네비게이션 스크립트 ==== -->
+
+    <!-- ==== 미니게임 구동용 순수 바닐라 JavaScript ==== -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 게임 엔진용 DOM 요소 탐색
+            const gameScreen = document.getElementById('game-screen');
+            const character = document.getElementById('game-character');
+            const obstacle = document.getElementById('game-obstacle');
+            const scoreBoard = document.getElementById('game-score-board');
+            const overlay = document.getElementById('game-overlay');
+            const overlayText = document.getElementById('game-overlay-text');
+            const overlaySub = document.getElementById('game-overlay-sub');
+            const btnStart = document.getElementById('btn-start');
+            const btnJump = document.getElementById('btn-jump');
+
+            // 게임 플레이 핵심 상태 관리 변수
+            let isPlaying = false;
+            let score = 0;
+            let gameLoopRequest = null;
+            let scoreInterval = null;
+
+            // 중력 및 점프 물리 연산 파라미터 (60fps 기반의 Euler 연산 구현)
+            const gravity = 0.55;           // 하강 견인 물리 속도
+            const jumpStrength = 10.5;      // 캐릭터 최초 점프 탄성
+            let charY = 0;                  // 바닥으로부터의 캐릭터 Y축 높이 (px)
+            let charVelocityY = 0;          // 캐릭터 수직 속도
+            let isJumping = false;          // 점프 중복 발생 제어 플래그
+
+            // 장애물 연산 전용 상태 변수
+            let obstacleX = 0;              // 장애물의 수평 X축 좌표 (px)
+            let obstacleSpeed = 4.2;        // 장애물의 돌진 속도 (난이도에 따라 동적 가속)
+            let currentObstacleEmoji = '📝'; // 현재 화면에 등장한 위협 요소 이모지
+
+            // SSAFY 장애물 리스트 (과제, 오류, 시험)
+            const obstaclePool = ['📝', '🐛', '🔥', '💻', '💣', '❌', '⚠️'];
+
+            // 1. 캐릭터 점프 액션 연산 함수
+            function triggerJump() {
+                if (!isPlaying || isJumping) return;
+                isJumping = true;
+                charVelocityY = jumpStrength;
+            }
+
+            // 2. 물리 갱신 및 프레임별 충돌 연산 엔진 (Main Game Loop)
+            function updateFrame() {
+                if (!isPlaying) return;
+
+                // [A] 캐릭터 물리 법칙 계산
+                if (isJumping) {
+                    charVelocityY -= gravity; // 중력 누적 반영
+                    charY += charVelocityY;   // Y 위치 이동
+
+                    // 바닥에 안착했는지 검사
+                    if (charY <= 0) {
+                        charY = 0;
+                        charVelocityY = 0;
+                        isJumping = false;
+                    }
+                }
+                // 캐릭터 Y축 포지션 DOM 갱신 (floor 높이 10px 마진 보정)
+                character.style.bottom = (10 + charY) + 'px';
+
+                // [B] 장애물 스크롤링 물리 계산
+                obstacleX -= obstacleSpeed;
+                if (obstacleX < -40) {
+                    // 화면 왼쪽 한계를 넘어가 탈출했을 경우 -> 리스폰 및 무작위 패턴 갱신
+                    obstacleX = gameScreen.clientWidth;
+                    const randomIndex = Math.floor(Math.random() * obstaclePool.length);
+                    currentObstacleEmoji = obstaclePool[randomIndex];
+                    obstacle.textContent = currentObstacleEmoji;
+
+                    // 플레이 타임(점수)에 비례한 점진적 강제 기동 속도 스케일링
+                    obstacleSpeed = 4.2 + Math.floor(score / 150) * 0.45;
+                    if (obstacleSpeed > 10) obstacleSpeed = 10; // 플레이 한계 속도 가드레일 작동
+                }
+                // 장애물 X축 포지션 DOM 갱신
+                obstacle.style.left = obstacleX + 'px';
+
+                // [C] 정확하고 자비로운 히트박스(Hitbox) 판정 시스템
+                // 캐릭터 바운딩 좌표 (X축 고정값)
+                const charLeft = 45 + 5;           // 판정 자비 픽셀 추가
+                const charRight = 45 + 36 - 5;
+                const charHeight = 34;             // 판정 높이
+
+                // 장애물 실시간 실측 좌표
+                const obsLeft = obstacleX + 5;
+                const obsRight = obstacleX + 34 - 5;
+                const obsHeight = 30;              // 장애물의 수직 상단 위협 높이
+
+                // 2D 직사각형 실시간 충돌 교차 조건 연산
+                const hasOverlapX = (charRight > obsLeft) && (charLeft < obsRight);
+                const hasOverlapY = (charY < obsHeight);
+
+                if (hasOverlapX && hasOverlapY) {
+                    // 충돌 감지 -> 게임 강제 중단
+                    handleGameOver();
+                    return;
+                }
+
+                // 다음 루프 드로우 스케줄링
+                gameLoopRequest = requestAnimationFrame(updateFrame);
+            }
+
+            // 3. 게임 시작 함수 (State & Button Controls)
+            function startGame() {
+                if (isPlaying) return; // 중복 실시간 실행 방지 보안 가드레일
+
+                // 상태 초기화
+                isPlaying = true;
+                score = 0;
+                charY = 0;
+                charVelocityY = 0;
+                isJumping = false;
+                obstacleSpeed = 4.2;
+                
+                // 디바이스의 너비에 맞게 장애물 스타트 포지션 초기화
+                obstacleX = gameScreen.clientWidth;
+                obstacle.textContent = obstaclePool[Math.floor(Math.random() * obstaclePool.length)];
+
+                // DOM 갱신
+                scoreBoard.textContent = '몰입 점수: 0';
+                overlay.style.display = 'none'; // 오버레이 스크린 오프
+
+                // 버튼 컨트롤 활성화 상태 정의
+                btnStart.disabled = true;
+                btnJump.disabled = false;
+
+                // 물리 엔진 가동 및 몰입 점수 시계 연동 (100ms당 1점 누적)
+                updateFrame();
+                scoreInterval = setInterval(() => {
+                    score += 1;
+                    scoreBoard.textContent = `몰입 점수: ${score}`;
+                }, 100);
+            }
+
+            // 4. 게임 오버 처리 함수
+            function handleGameOver() {
+                isPlaying = false;
+
+                // 루프 타이머 및 애니메이션 취소
+                if (gameLoopRequest) cancelAnimationFrame(gameLoopRequest);
+                if (scoreInterval) clearInterval(scoreInterval);
+
+                // UI 메시지 변경 및 활성화
+                overlayText.innerHTML = `<span style="color: #e11d48; font-size: 1.1rem; display: block; margin-bottom: 4px;">실패해도 다시 도전!</span>최종 몰입 점수: <span style="color: var(--color-skyblue); font-size:1.1rem;">${score}</span>`;
+                overlaySub.textContent = '게임 시작 버튼을 눌러 다시 도전하세요.';
+                overlay.style.display = 'flex';
+
+                // 버튼 컨트롤 원복
+                btnStart.disabled = false;
+                btnJump.disabled = true;
+                btnStart.focus(); // 터치/키보드 재조작 접근성 지원
+            }
+
+            // ==== 조작 바인딩 레이어 ====
+
+            // [A] 게임 시작 제어 장치
+            btnStart.addEventListener('click', () => {
+                startGame();
+            });
+
+            // [B] 스크린 내 점프 물리 버튼 전용 바인딩
+            btnJump.addEventListener('click', () => {
+                triggerJump();
+            });
+
+            // [C] 데스크톱 전용 단축키 입력 장치 (Space 또는 위쪽 방향키)
+            window.addEventListener('keydown', (e) => {
+                if (e.code === 'Space' || e.code === 'ArrowUp') {
+                    if (isPlaying) {
+                        e.preventDefault(); // 웹 브라우저 스크롤 하강 기본 기동 방지
+                        triggerJump();
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
